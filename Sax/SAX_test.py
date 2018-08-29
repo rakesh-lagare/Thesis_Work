@@ -49,6 +49,7 @@ sax_window = sax_via_window(x1, window_size, word_size, alphabet_size,nr_strateg
 
 sax_keys =list(sax_window.keys())
 sax_values =list(sax_window.values())
+
 elements_num = 0
 for key in sax_window:
    elements_num += len(sax_window[key])
@@ -65,26 +66,9 @@ def split(arr, size):
      return arrs
 
 
-#mydf = pd.DataFrame(0,index=alphabet_size)
-#mydf = pd.DataFrame(np.zeros((elements_num, alphabet_size)))
-#mydf.append([3,4,5])
-     
- 
-def Euclidean_Dist(df):
-  lenth= len(df)
-  num=0
-  while (num < lenth):
-    
-    row_num= df.iloc[[num]].values[0]
-    mm=df.apply(lambda row: np.linalg.norm(row-row_num)  , axis=1)
-    num=num+1  
-  return mm
-    
+
     
 i=0
-
-
-
 for n_val in sax_values:
     print(x1[n_val])
     print(n_val)
@@ -98,28 +82,54 @@ for n_val in sax_values:
         while (alpha_count < alphabet_size):
             x2.append(x1[n1_val+alpha_count])
             alpha_count=alpha_count+1
-             
-    x3= list();
+   
     
-    nn=split(x2,3)
-    
+    nn=split(x2,alphabet_size)
     df = pd.DataFrame(nn)
     df.insert(loc=0, column='key', value=keyy)
+    df.insert(loc=1, column='start', value=n_val)
     print("df",df)
-   # diff= Euclidean_Dist(df)
-    #print("difffffff",diff)
+    
+    
+    if(i==0):   
+     df_res =df.copy()
+    else:
+     df_res=df_res.append(df, ignore_index=True)
+    
+
+    
     i=i+1
+    x3= list();
     for n2_val in x2:
         x3.append(n2_val)
-    plt.plot(x3)
-    plt.show()    
+    #plt.plot(x3)
+    #plt.show()    
         
        
+#end of for loop
+    
+    
+    
+  
+lenth= len(df_res)
+df_new= df_res.drop(columns=['key', 'start'])
+for i in range(0,lenth-1):
+    for j in (range( i+1,lenth)):
+        key1=df_res.iloc[i]['key']
+        key2=df_res.iloc[j]['key']
+        if(key1==key2):
+         row1= df_new.iloc[[i]].values[0]
+         row2= df_new.iloc[[j]].values[0]
+         mm= np.linalg.norm(row1-row2)
+         l1=([row1,row2,mm,key1])
+         if(i==0 and j==1):
+          df1= pd.DataFrame([l1])
+         else:
+          df1=  df1.append([l1], ignore_index=True)
+        
 
-
-
-
-
+op= df1.groupby(3).max()
+op1= df1.sort_values(by=[3])
 
 
 
