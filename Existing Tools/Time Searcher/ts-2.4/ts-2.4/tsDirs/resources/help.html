@@ -1,0 +1,140 @@
+<HTML>
+	<p align="center">
+		<font size="5"><b>TimeSearcher Quick Reference</b></font></p>
+	<P><BR>
+		After loading a dataset from the File menu, these are the operations that can 
+		be performed:</P>
+	<P><u>Main interface:<BR>
+		</u>You can select the number of variables you want to display on the Toolbar.<BR>
+		You can select the overview variable to be displayed&nbsp;on the Overview 
+		Panel.</P>
+	<p><u>Interface parts:</u>
+		<br>
+		Toolbar (top), Overview Panel (bottom), Items Panel (bottom right), Details 
+		Panel (top right), Variables View containing Query Panels (top left)</p>
+	<p><u>Variables View (top left quadrant):<br>
+		</u>Move the mouse over a graph, click to select it when it turns yellow.<BR>
+		To select the timeline, simply click within any query panel (not on a graph, 
+		when no graph appears yellow).<BR>
+		You may also select the timeline from the Details Panel.</p>
+	<p><u>Overview Panels (bottom):<br>
+		</u>Move or resize the overview rectangle, and&nbsp;all query panels will be 
+		synchronized what falls into the overview rectangle.<BR>
+		If you want only the query panel corresponding to the variable on the overview 
+		is shown to be synchronized, uncheck<BR>
+		View-&gt;Synchronize overviews from the menu.</p>
+	<p><u>How to select multiple graphs:<br>
+		</u>To select additional graphs besides the currently selected graph, press 
+		CTRL while clicking on the graphs you want to also be selected.<BR>
+		If you click to an already selected graph while pressing CTRL, it will be 
+		unselected.<BR>
+		You may do this operation on the Items Panel, as well.</p>
+	<P><U>How to show selected graphs only:</U><BR>
+		Choose View-&gt;Show Selected Items only from the menu, or use CTRL+F to toggle 
+		between showing all and only the selected ones.</P>
+	<P><U>Startup options:</U><BR>
+		You may set startup options that will allow you:</P>
+	<UL>
+		<LI>
+		to specify a file's location to be opened automatically when you open 
+		TimeSearcher
+		<LI>
+			to specify how many variables you want to see (same as the number of Query 
+			Panels you want to have)
+		</LI>
+	</UL>
+	<P>In order to view/change the startup options, select Edit-&gt;Preferences from 
+		the menu.
+	</P>
+	<P><U>Filtering (using TimeBoxes):</U><BR>
+		You can filter series by first clicking the rectangle on the toolbar and 
+		drawing it on a Query Panel.<BR>
+		Any series whose value remain for the time period spanned by the TimeBox will 
+		remain, all other<BR>
+		will be filtered. If multiple TimeBoxes are created, they are ANDed. Operations 
+		are as follows:</P>
+	<UL>
+		<LI>
+		to select a TimeBox: click in the middle of a TimeBox
+		<LI>
+		to select an additional TimeBox: press CTRL while clicking the additional 
+		TimeBox
+		<LI>
+		to delete selected TimeBox(es): press Delete on keyboard
+		<LI>
+		to move selected TimeBox(es): click on any selected one and drag
+		<LI>
+			to resize selected TimeBox(es): click on any selected TimeBox's handle and drag</LI></UL>
+	<P><U>Pattern Search&nbsp;(using SearchBoxes):</U><BR>
+		You can specify a pattern via a subgraph of an existing time series. To do so:</P>
+	<UL>
+		<LI>
+		select the time series you will specify the pattern on
+		<LI>
+		click the rectangle having an inverse ! on the toolbar
+		<LI>
+		draw a SearchBox on the selected series such that it encloses the subgraph you 
+		want to specify as the pattern
+		<LI>
+		select the SearchBox by clicking on it,&nbsp;you will see the SearchButton 
+		below and the Tolerance Indicator on the right
+		<LI>
+			choose/guess the desired tolerance in %, do so by dragging the&nbsp;black 
+			handle on the Tolerance Indicator,<BR>
+		use + and - on the keyboard to fine tune.
+		<LI>
+		click the SearchButton, you will see results also on the overview
+		<LI>
+		the green triangle is the pattern you selected, the red ones are matching ones
+		<LI>
+			you can select the transformations to be applied both to the pattern and all 
+			subgraphs at the top of the toolbar.<BR>
+			They are Linear Trend (removal), Offset Translation, Noise Reduction, Amplitude 
+			Scaling. If AutoSearch is checked,<BR>
+		search will be repeated when you change any transformation option.
+		<LI>
+			The selected transformations are applied during search just before comparing 
+			each subgraph with the pattern,
+			<BR>
+			and they are not reflected on the screen.</LI></UL>
+	<P>All TimeBox operations&nbsp;may be applied to&nbsp;SearchBoxes.</P>
+	<P><U>Miscellaneous:</U><BR>
+		You can toggle between value, and Log(1+value)&nbsp;from the View menu.<BR>
+		You can toggle between value, and Exp(value) only for the 1st variable from the 
+		View menu.</P>
+	<H3>Known problems and how to avoid them:</H3>
+	<UL>
+		<LI>
+		When you open TimeSearcher, if you get an error about&nbsp;opening&nbsp;a file, 
+		update your startup options.
+		<LI>
+			Sometimes, when you select items, the previously selected item may remain as 
+			selected, a behavior as if you press and hold CTRL key.
+			<BR>
+		Simply press and release CTRL key.
+		<LI>
+			You may see that&nbsp;the number of variables on display change when you do 
+			certain operations. This effect exists when you change the number of variables 
+			on the display to something other than the number in Edit-&gt;Preferences, 
+			"Number of variables to display". The operations that cause this are&nbsp;"Show 
+			selected items only", "Log(1+value)",&nbsp;"Exp(value) of 1st variable" under 
+			View menu.<BR>
+		When this situation arises, you may change the number of variables from the top 
+		of the toolbar using the "Number Of Variables" combo box.
+		<LI>
+			Use caution when using the View-&gt;"Log(1+value)". When&nbsp;the dataset has 
+			values &lt;=0 in any variable, the application will generate an error.<BR>
+		Close the application and start another one if this happens.
+		<LI>
+			Use caution when using View-&gt;"Exp(value) of 1st variable".&nbsp; When the 
+			dataset contains values high enough whose exponents are beyond the limits of a 
+			double floating point precision, the application may freeze.
+			<BR>
+		In that case, open task manager and terminate the application manually.
+		<LI>
+			When switching to the Individuals View (2nd tab), there might be a resize 
+			problem with curves.
+			<BR>
+			Resize the Individuals View slightly using the right vertical edge to refresh 
+			the screen.</LI></UL>
+</HTML>

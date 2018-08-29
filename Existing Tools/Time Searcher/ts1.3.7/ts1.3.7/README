@@ -1,0 +1,20 @@
+
+TimeSearcher Release Notes
+hsh@cs.umd.edu
+
+Thanks for using TimeSearcher. documentation is available in HTML
+format - see ./docs/index.html. Please contact hsh@cs.umd.edu with any 
+bug reports, requests, or inquiries.
+
+
+23 December 2002
+
+TimeSearcher 1.1 does not contain much in the way of new technology,
+but it is significantly different under the hood. The Jazz code for
+scenegraphs and displays has been replaced with Piccolo code, which
+gives us better performance with a significantly lower overhead - the
+size of the code has been reduced by almost 30%.
+
+
+Enjoy!
+

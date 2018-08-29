@@ -1,0 +1,645 @@
+<HTML>
+<HEAD>
+<TITLE>TimeSearcher User's Manual</TITLE>
+</HEAD>
+<BODY>
+<H1>TimeSearcher User's Manual</h1>
+<hr>
+<b><i><A HREF="http://www.cs.umd.edu/~hsh/">Harry
+Hochheiser</A></i></b>, <A
+HREF="mailto:hsh@cs.umd.edu">hsh@cs.umd.edu</A><br>
+TimeSearcher HomePage: <A
+HREF="http://www.cs.umd.edu/hcil/timesearcher">http://www.cs.umd.edu/hcil/timesearcher</A><br> 
+26 February 2003 
+<HR>
+
+<H2>System Requirements</H2>
+
+TimeSearcher is built on top of the <A
+HREf="http://www.cs.umd.edu/hcil/piccolo">Piccoo zooming toolkit</a>,
+which requires Java 1.4.  Therefore, to run TimeSearcher, you'll need
+a  Windows or Unix/Linux computer running a recent version of the Java
+SDK - 1.4 or better. If you don't have the SDK, it can be downloaded
+from <A HREF="http://java.sun.com">http://java.sun.com</A>. <p> 
+
+If you want to run TimeSearcher on a Macintosh, please get in touch
+with me. As of January 2003, the OS X distributions do not include
+Java 1.4, so the latest version of TimeSearcher will not run. I can
+provide older versions of TimeSearcher, with limited functionality,
+upon reques. Unfortunately, the OS X implementation of the Java
+runtime environment (JRE) lags behind Windows/Unix Java JREs, so
+performance on Macs will be substantially poorer than on
+Windows/Unices.</p> 
+
+<H2>Installation</H2>
+To install TimeSearcher, you will need to save the attached archive
+file to disk and then decompress it into a location of your choosing
+on your computer.To decompress it, use WinZip or similar utility if
+you're using windows, or "gunzip -c TimeSearcher.tar.gz | tar xvf -"
+if you're using Unix/Linux.<P> 
+
+This will cause the creation of a directory labeled "ts". To run
+TimeSearcher, go into this directory and execute the file named
+ts.bat (if using windows) or ts.sh (if linux). <P>
+
+<h2>Using TimeSearcher</h2>
+
+Once the program is up and running, the first step is to load your
+data file. To do this, go to the "File" menu and choose "open data
+file". This will show you a list of data files that you can load
+in. There are several example files. Click on a file, press
+"open", and your data set will load.<P>
+
+If you have your own data file in a comma-delimited text file,
+spreadsheet file, or similar format, you can follow <A
+HREF="./fileformat.html">a few simple steps</a> to format your data
+for use with TimeSearcher.<P>
+
+Once the data set is loaded, you can immediately begin to look at the
+individual items by moving the scroll bar on the window on the
+lower left-hand window, which displays the individual items.  You
+can also browse the data set by scrolling the middle window on the
+right-hand side. These two windows are synchronized: clicking on an
+item in one window will lead to updating of the other. <P> 
+
+<IMG SRC="./graphics/fullscreen.gif" ALT="The TimeSearcher Window">
+<p><em>Figure 1: The main TimeSearcher Window, with the data envelope
+display in the upper window </em><p
+
+<P>Queries are created in the upper-left window. Initially, this
+window contains a "data envelope". This overview display is a contour
+that includes all of the values between the minimum and maximum values
+that any item in the data set has at each time point. Thus, the data
+envelope tells you where data is and isn't, at each time point: at any
+given time point, there are no items that have values at that time
+point outside of the range of the envelope. 
+
+This query space  has two modes of operation: when the "hand" icon on
+the upper-left corner of the toolbar is selected (gray), the system is
+in the default query modification mode. When the adjacent rectangle is
+highlighted,  you are in query creation mode.  <P> 
+
+<IMG SRC="./graphics/toolbarcloseup.gif" ALT="A Closeup of the
+TimeSearcher Toolbar">
+<p><em>Figure 2: A closeup of the TimeSearcher toolbar. The highlighted
+rectangular button is used to enter query creation mode.</em><p>
+
+To switch into query creation mode, press the rectangle button. This
+enables query creation mode for one timebox, after which the mode will
+revert to modification mode . If you wish to "lock" the system into
+creation mode for multiple queries, double click on the rectangle
+button. If you do this, you will need to manually press on the hand
+button to revert to query modification mode. <p>
+
+<h2>Query Creation</h2>
+
+Once you've switched into query creation mode, you can create a
+timebox by simply drawing it on the query space: put the mouse at the
+desired location of the upper left-hand corner of the timebox, drag it
+to the lower right-hand corner, and release the button. This method of
+drawing a box should be familiar from your use of drawing programs. <p>
+
+The query will be executed immediately after you release the button,
+without any further interaction required. When the query is executed,
+a "query envelope" overview will be drawn. This overview is similar to
+the graph envelope, but it shows the extreme values for only those
+items that match the current query.<p>
+
+Multiple query items can be created to form conjunctive queries. In
+other words, if you have multiple boxes, an item must satisfy the
+constraints associated with <em>all</em> of the boxes in order to be
+included in the data set.<p>
+
+<IMG SRC="./graphics/multiquery.gif" ALT="A query containing two
+timeboxes and a query envelope"><p>
+<em>Figure 3: Closeup of the query space, showing a query containing
+two timeboxes and the associated query envelope display</em><p>
+
+When a query is created, the list of items in the item list and
+graph display of individual items are updated to include only
+those items that match the query. In the graph display, the time
+points corresponding to each query item are highlighted.
+
+<h2>Query Modification</h2>
+
+To modify timeboxes, go into modification mode and select the
+timebox(es) that you would like to modify. Individual timeboxes can be
+selected by clicking, multiples can be selected via "lassoing" -click
+on the background and draw a lasso box that covers all of the
+timeboxes that you want to select. Multiple boxes can also be selected 
+    by "shift-clicking": after selecting a single box by clicking on
+    it, a box can be added to the selection by clicking on the box
+    while holding down the "shift" key. Timeboxes can be de-selected
+    by clicking on the background.<p> 
+
+
+Once you have selected the desired box(es), you can click and drag on
+them to move them. Arrow keys can also be used to move the boxes
+left,right, up or down.  <p>
+
+The resize handles (purple squares) that are found on selected
+timeboxes can be used to scale the timeboxes - simply grab the handle
+and pull in the desired direction. This will work for single or
+multiple timeboxes. <p>
+
+<IMG SRC="./graphics/multiquery-selected.gif" ALT="multi-timebox query
+with boxes selected for modification.">
+<p><em>Figure 4: A two-timebox query with both boxes selected for modification</em><p>
+
+If you've selected only one timebox, you can modify it using the range
+sliders in the lower right-hand window. These two-sided sliders allow
+for control of each dimension (height and width) of the timebox
+separately: the top slider controls the width (time extent), while the
+bottom controls the height (values). To change the range of values
+covered in that dimension, click on the end of the slider that you'd
+like to change and drag it to the desired location. To move the box in
+a dimension, click on the center of the range slider and drag it to
+the desired position.<p> 
+
+<IMG SRC="./graphics/rangesliders.gif" ALT="1D Range sliders for modifying
+queries"><p>
+<em>Figure 5: Range sliders for modifying queries. The top slider
+controls the box's range in time, and the bottom slider controls the
+range in value.</em><p>
+
+<h2>Deleting Queries</h2>
+
+Once queries are created, there are a several ways that they can be
+    removed.
+
+<UL>
+<LI> Menu Items:  Two items in the "Edit" menu can be used to delete
+        queries: 
+<UL><LI>"Clear Selected Queries" will remove all boxes that are
+            currently selected
+    <LI> "Clear Queries" will remove all of the queries in the display 
+            space.
+</UL>
+<LI> Pressing the delete key will delete any selected queries. This is 
+        equivalent to the "Clear selected queries" menu option.
+<LI> Right-click popup menu: Pressing the mouse button while hovering
+        over a box leads to the display of a popup menu. Selecting
+     
+   "Delete" from that menu will remove the box.
+</UL>
+
+<IMG SRC="./graphics/popup.gif" ALT="A timebox popup menu">
+<EM><p>Figure 6: A timebox popup menu</em><p>
+
+<h2>Overviews</h2>
+
+In addition to the "data envelope" and "query envelope" displays
+described above, TimeSearcher also has an optional "graph overview"
+display which shows all of the items in the data set (or in the result
+set for the current query), superimposed upon each other in the query
+space.<p>
+
+<IMG SRC="./graphics/graphoverview.gif" ALT="Graph Overview display">
+<P><em>Figure 7: Query Space with graph envelope display</em><p>
+
+These lines can be selected: mousing over one of the graph lines leads
+to display of that item in the lower display window, and item list on
+th right, and associated details in the detail window in the upper
+right-hand corner. Similarly, if you click on one of the items in the
+lower-left display, or in the item list on the right, the appropriate
+graph overview line will be highlighted.<P>
+
+The graph overview is not turned on by default. To activate it, select
+"Graph Overview" from the "View" menu. As the graph overview can be
+computationally intensive, it will not be displayed unless the number
+of items in the result set is below a given threshold. As long as
+size of the result set is greater than the threshold, only the query
+envelope and data envelopes will be displayed. When your query becomes
+specific enough to make the size of the result set smaller than the
+threshold, the overview will be displayed. To adjust the threshold,
+select "Preferences" from the "Edit" menu.<p>
+
+If desired, the data and query envelopes can be turned off by
+selecting "Data Envelope" from the "View" menu.<p>
+
+<h2>Drag and Drop</h2>
+
+If there is an element that you find interesting, you might use it as
+the basis of a "drag and drop query by example". Simply click on this
+item in the lower left-hand window, drag to the upper left-hand query
+window, and release. This will cause creation of a query containing
+multiple timeboxes, which can then be scaled, moved, etc. like other
+timeboxes. <p> 
+
+<IMG SRC="./graphics/dragdrop.gif" ALT="drag and drop query by
+example">
+<P><em>Figure 8: Example of a drag and drop query</em><P>
+
+<h2>Multiple Variables</h2>
+
+If your data set has more than one time-varying attribute, the first
+attribute is initially displayed by default. Additional variables can
+be added via the pull-down menu on the upper-right hand side of the
+lower tool-bar.<p>
+
+<IMG SRC="./graphics/switch.gif" ALT="Toolbar pulldown for switching
+variables">
+<P><em>Figure 9: Toolbar pulldown menu for switching query variables</em><p>
+
+When this pull-down is used to select a new variable, an additional
+tabbed pane is added to the query space. The tab controls can be used
+to move between the different variables. Similarly, variables can be
+removed by clicking the "x" on the appropriate tab. Once a variable is
+remvoed, it can be reinstated via the pull-down menu.<P>
+
+<IMG SRC="./graphics/multipletabs.gif" ALT="Tabbed query space for
+multiple variables">
+<P><em>Figure 10: Query Space with tabs for two variables</em><P>
+
+When more than one variable is present, TimeSearcher provides an
+      overview summary window that can be used to view the queries
+      on all variables - not just the one that is currently
+      viewed. This window contains one pane for each currently active
+      variable, with the selected variable highlighted.<p>
+
+<IMG SRC="./graphics/multiplesum.gif" ALT="Summary of queries over multiple variables">
+<P><em>Figure 11: Summary window  for multiple variable query.</em><p>
+
+Each variable can be queried individually by placing a query box in
+      the appropriate window. The result set that is displayed
+      contains only those items that  match <em>all</em> of the active
+      queries on <em>all</em> of the current variables. However, each
+      window will have its own data and query envelopes and graph
+      overview (if selected), representing the the displayed items and
+      their values for the selected variable.  
+
+Similarly, when multiple variables are present, the display panel at
+the bottom of the TimeSearcher window shows the items in the data set,
+using values for the currently selected variable. However, the time
+points for queries for <em>all</em> current variables will be
+highlighted. For an alternative display, the "Display All Variables"
+checkbox in the "View" menu can be selected. This will cause profiles
+for <em>all</em> of the current selected variables to be drawn on the
+query space for each item in the result set.<P> 
+
+<IMG SRC="./graphics/displayall.gif" ALT="Display of all current
+variables">
+<P><em>Figure 12: Display space with multiple variables shown</em><p>
+
+
+<h2>Normalizing Data</h2>
+
+TimeSearcher supports two different strategies for normalizing
+data. To normalize, choose one of the three choices from the view
+menu: 
+<UL> 
+<LI><em>Raw Data</em>: Shows the data as provided in the data set.
+<LI> <em>Extreme Normalized</em>: Performs a linear normalization on
+each item in the data set, with the maximum and minimum values of the
+item at any given time point defining the extreme.
+<LI> <em>Deviation Normalized</em>: Each value is replaced by a
+standardized score: The average value and standard deviation is
+calculated for each item. For each time point, the item's average is
+subtracted from the value at that time point, and the result is
+divided by the item's standard deviation. 
+</UL><P>
+
+When the normalization setting is changed, the label in the status bar
+at the bottom of the query space will be changed to indicate the
+currently active data treatment  - "RAW", "NORMALIZED", or
+"DEVIATIONS", respectively.<P>
+
+As with changes to the query variables, changes in the normalization
+treatment cause the query space to be cleared and reset.<P>
+
+<h2>Inverting Queries</h2>
+
+Some users of TimeSearcher have expressed interest in the ability to
+define a query that is somehow a "reciprocal" of a  previously defined
+query. For example, given a query that defines an upward transition,
+they might like to see a similar downward transition at the same time
+points.
+
+To do this, create a query consisting of more than one timebox,select
+the desired elements, and  press the "flip" button on the toolbar
+(or select "Flip Selected Queries" from the "Transform
+Menu". <P>
+
+<IMG SRC="./graphics/flip.gif" ALT="The Flip button">
+<p><em>Figure 13: The Flip button on the TimeSearcher Toolbar</em><p>
+
+<IMG SRC="./graphics/flip-before.gif" ALT="a two-timebox query before
+        flipping">
+<P><em>Figure 14: A two-timebox query, before flipping</em><p>
+<IMG SRC="./graphics/flip-after.gif" ALT="a two-timebox query after
+        flipping">
+<P><em>Figure 15: The inverted version of the query.</em><p>
+
+
+<h2> Disjunctive ("anyof") Queries</h2>
+
+Timebox queries are conjunctive by default.  In other words, a time
+    series in the data set must be within the given value range for
+    <em>all</em> of the time points included.  TimeSearcher also
+    supports an alternative interpretation: timeboxes that find items
+    that have a value in the given range for <em>at least one</em>
+    time point during the interval. In other words, the item has to
+    pass through the timebox at any of the points, not all of the
+    points.<p>
+
+To use this alternative interpretation, create a timebox and then
+      right-click on it to pull up a menu.The "any" checkbox on the
+      popup menu switches from the default conjunctive mode to the
+      <em>anyof</em> interpretation, and the color of the box will
+      change to indicate the change in query semantics.<p>
+
+
+<IMG SRC="./graphics/any-before.gif" ALT="a standard timebox query">
+<IMG SRC="./graphics/any-after.gif" ALT="an anyof timebox query">
+<P><em>Figure 16: A timebox query and its </em>anyof<em>
+equivalent</em><p> 
+
+<h2>Variable Time Timeboxes</h2>
+
+TimeSearcher provides an extended version of timeboxes, known as
+<em>variable time timeboxes</em>, or VTTs. VTTs can be used to
+identify items in a data set that have a values in a given range
+for an interval consisting of a number of consecutive
+measurements. However, unlike standard timeboxes, this interval is not
+specified exactly - instead, it can occur at any point within a
+broader window.  This functionality has been shown to be more useful
+than standard timeboxes in identifying trends in data sets(see <A
+HREF="ftp://ftp.cs.umd.edu/pub/hcil/Reports-Abstracts-Bibliography/2002-15html/2002-15.htm">An
+Augmented Visual Query Mechanism for Finding Patterns in Time
+SeriesData</a>. 
+
+VTTs are created by selecting the VTT creation button on the
+toolbox. This button, which is adjacent to the button for creation of
+standard timeboxes, places TimeSearcher into VTT-creation
+mode. Initial creation of a VTT is exactly the same as it is for a
+timebox: simply click on one corner and drag to the opposite
+corner. Note that a VTT is similar to a standard timebox, but it
+appears to have a second rectangle inside the outer shell.<p>
+
+<IMG SRC="./graphics/vtttoolbar.gif" ALT="VTT button on toolbar">
+<P><em>Figure 17: The toolbar button to be used for creating variable
+time timeboxes.</em><p>
+
+<IMG SRC="./graphics/initialvtt.gif" ALT="Initial VTT">
+<P><em>Figure 18: A VTT as initially created. Note that the data
+envelope display has been turned off, for clarity.</em><p>
+
+Just as with a standard timebox, the vertical extent of the VTT
+defines a range of values that items must fall within. Unlike a
+timebox, VTTs have two sets of horizontal extents. The inner extent
+defines the duration of interest - how long must each item be within
+the given value ranges? The outer extents define a window during which
+this interval must be found.  For example, in the figure above, items
+must be in the given value range for a 5 month-period sometime between
+December and April. Since that range is exactly a 5-month period, this
+box is equivalent to a standard timebox occupying the same time
+periods.
+
+The outer time extents and value extents of a VTT can be changed by
+dragging and scaling, just a with any timeobx. However, the handles on
+the sides of the inner rectangle can be dragged to change the length
+of the interval of interest.<p>
+
+<IMG SRC="./graphics/constrainedvtt.gif" ALT="VTT with modified inner constraints.">
+<P><em>Figure 19: A VTT with internal constraints modified, via
+dragging of the handles on the internal rectangle.</em><p>
+
+For example, this figure of a modified VTT shows the inital VTT with
+constraints relaxed to include an inner interval of only two time
+periods in duration. In effect, this query asks for items that have
+values in the given range for any two consecutive months between
+December and April, inclusive.
+
+As different items in the data set might match VTTs at different time
+points, the graph display of each item in the result set will
+highlight only those time points that satisfy the constraints of the
+VTT.<p>
+
+
+<IMG SRC="./graphics/vttgraphs.gif" ALT="Graph display of results
+matching VTT.">
+<P><em>Figure 20: Items that match the VTT query given above. Note
+that the first item matches the VTT during Dec-Jan and Mar-Apr, while
+the second matches the constraints druing Feb-Mar and Mar-Apr.</em><p>
+
+<h2>Angular Queries</h2>
+
+Angular queries can be used to find items that have specified relative 
+    increases  (or decreases) in value from one time point to
+    another, no matter what the starting or ending value.For example,
+    users might want to find items that increased slighlty between
+    time periods 4 and 7.<p>
+
+The name "angular queries" refers to the angle between 
+      the profile of an item during certain time points and the 
+    the horizontal to be included in the result set. An angular  An
+      angular query specifies a minimum and maximum value for the
+      angles that will be allowed for an item to be included in the
+      result set.
+
+<IMG SRC="./graphics/angular-calc.gif" ALT="Angular Query
+        Calculation"><P>
+<em>Figure 21: Angular queries can be used to specify items with a
+        relative (not absolute increase in value). For example,the
+        line between the value of an item at the starting time point
+        makes an angle with the horizontal. This anagle must be
+        between  between theta1 and theta2 to satisfy an angular
+        timebox with those angle constraints.</em><p>
+
+To create angular queries, the user pushes the angular query creation
+        button. This button is analogous to similar buttons used for
+        creation of standard and variable-time timeboxes. Angular
+        queries are initially created by specifying a rectangular
+        region - just as standard and variable time timeboxes are
+        created. 
+<p>
+
+<IMG SRC="./graphics/angulartoolbar.gif" ALT="The Leader button on the Toolbar">
+<P><em>Figure 22: The toolbar button for Angular Queries</em><p>
+
+
+<IMG SRC="./graphics/angularquery.gif" ALT="An Angular Query">
+<P><em>Figure 23: An angular query.</em><p>
+
+<p><IMG SRC="./graphics/angular-annotated.gif" ALT="An Annotated Angular Query"><p>
+<em>Figure 24: An annotated angular query.The horizontal bar on the right
+      defines the range of angles that an item must satisfy to be
+      included in the result set.</em><p> 
+
+
+Because angular queries measure relative changes and not absolute
+values, items that match an angular query might be found anywhere in
+the value range, including positions above and below the current
+position of the query. In fact, the vertical position of an angular
+query is unimportant - the query is completely determined by the angle
+and the width of the vertical bar that determines the range of the
+query.
+
+There are two possible interpretations of angular queries. In the
+      default interpretation (the "all points" interpretation), an
+      item must fall within the specified range of angles for 
+      <em>every</em>transition during the specified range of time
+      points. In other words, if the angular query is sloped upwards,
+      the values of the item must increase at every time point during
+      the range covered by the query. <P>
+
+<p><IMG SRC="./graphics/angular-example.gif" ALT="Angular Query Results"><p>
+<em>Figure 25: Query envelope and graph overview of results from an
+        "all-points" angular query. As results of an  angular query
+        are determined by angle and not by position, the items that
+        match the query are actually above the query.</em><p> 
+ 
+The alternative interpretation is limited to consideration of the
+      values of each item at the end point of the
+      interval. Specifically, these queries consider the angle that
+      the line between those two values makes with the horizontal. If
+      this angle is within the desired range, the items is included in 
+      the result set, regardless of any intermediate values. <P>
+
+Angular queries are created in "all-points" mode by default. To
+      convert an angular query to "end-points" mode, right-click on
+      the query and check the "end points only" checbkox. This
+      checkbox can be de-selected to return to "all-points" mode.<P>
+
+<p><IMG SRC="./graphics/angular-end-points.gif" ALT="Angular Query Results"><p>
+<em>Figure 26: Query envelope and graph overview of results from an
+        "end-points" angular query. This query is the "end points"
+        version of the query given in Figure 24. As only the values at 
+        the ends of the interval are considered, this query contains
+        more items, including those that have downwards transitions
+        during the specified interval but still have the appropriate
+        net change over the entire interval.</em><p>
+      
+
+
+The position, width, angle, and range of angular queries can be changed by
+dragging the appropriate handles. As mentioned above, the vertical
+position of the angular query does not influence the final result,
+which is entirely determined by the angle and the range.<p>
+
+Angular queries are similar to angular brushes in parallel
+    coordinates(Hauser, Ledermann, and Doleisch, <em>Angular
+    Brushing of Extended Parallel Coordinates</em>). The main
+    difference is that angular queries can be used for comparison
+    of values at arbitrary time points, but angular brushes can only
+    be used to compare adjacent axes.<p>
+
+<h2>Saving Query Results</h2>
+
+If you have a query that includes interesting results, the "Save
+    Results" choice under the "file" menu can be used to save the
+    query in a human-readable form. If you make this selection and
+    then specify a file to be saved in, the extent of the current
+    query parameters, and  the items that match those constraints,
+    will be written to the given file in a text format.<p>
+
+If you wish to save the current query for future use, the "Save Query
+      File" choice under the "File" menu can be used. This stores the
+      query in a format readable by TimeSearcher. Please note that the
+      stored queries are not meant to be read by users - use "Save
+      Results" if you want to examine the query file yourself.<P>
+
+To load a stored query, use the "Open Query File" choice in the "File"
+      menu.<p> 
+
+Future versions of TimeSearcher will hopefully have more powerful
+      tools for saving query results.<P>
+
+<h2>Leaders and Laggards</h2>
+
+Many tasks require identifying items that have changes or values that
+    somehow anticipate the values in a data set. For example, a financial
+    analyst might want to identify stocks that rose and then fell in
+    the days before other stocks experienced similar changes.<P>
+      
+To support these tasks, TimeSearcher provides "Leader and Laggard"
+      functionality. This features takes a query created in the query
+      space and creates a reference copy of it (a "leader"), along
+      with a new copy indicating the similar trend, occuring one time
+      period later.<p>
+
+To do a leaders and "laggards" query, create a query containing
+      multiple timeboxes, and then either choose the "leaders" button
+      on the toolbar, or select "Set Leaders" from the "Edit" menu.<P>
+
+<IMG SRC="./graphics/leadertoolbar.gif" ALT="The Leader button on the Toolbar">
+<P><em>Figure 27: The toolbar button for Leaders and Laggards</em><p>
+
+When you activate this feature, the query space will be replaced with
+two new windows. The top window will contain the query as created,
+with a graph overview of the items that matched it. The bottom window
+will contain outlines representing the original query, and new query
+boxes, occupying value ranges corresponding to the original query, at
+time points shifted by one time period to the right.<p>.
+
+<IMG SRC="./graphics/leaderwindows.gif" ALT="The Leaders and Laggards
+query windows">
+<P><em>Figure 28: The Leaders and Laggards Query windows.</em><p>
+
+At this point, the boxes in the lower query window can be modified as
+desired, with the top window providing the reference point for
+comparison.<P>
+
+When this display is activated, the scrolling display of individual
+items will include both the items in the leader display (top) and the
+items that match the current query (lower query window). Items that
+match the leader display will have the word "Leader" displayed above
+them in the display list, and their entries in the item list will be
+displayed in magenta, mirroring the coloring used in the upper,
+"leader" display.<P>
+
+To leave "Leaders and Laggards" mode, press the toolbar button again,
+or select "Clear Leaders" from the "Edit" menu. The leader window will 
+be removed, and the query window will be restored, using the currently 
+active query.<P>
+
+<h2>Averages</h2>
+Some users may want to create queries relative to the average values
+in the data set. If you choose "Show Averages" under the "View" menu,
+a red line will be drawn, indicating the average value at each time
+point in the data set. Repeat this selection to turn off the average
+display.<P> 
+
+<IMG SRC="./graphics/averages.gif" ALT="Average value indicator">
+<P><em>Figure 29: Line indicating average values at each time point 
+in the data set.</em><p>
+
+When the average display is showing, a new button is added to the
+toolbar. This button, which is only active when TimeSearcher is in
+drawing mode, will cause the creation of a query centered around the
+average value at each time point.  This can be thought of as a
+"query-by-example" for the average value.<p>
+
+<IMG SRC="./graphics/averagetoolbar.gif" ALT="Average button on toolbar">
+<P><em>Figure 30: The toolbar button to be used for creating an
+average query.</em><p>
+
+<IMG SRC="./graphics/averagequery.gif" ALT="An Average query">
+<P><em>Figure 31: A query created by the average button. At each time
+point, the query box is centered around the average value in the data
+set at that time point.</em><p>
+
+
+<h2>Other Features</h2>
+
+<h3>Grid Display</h3>
+The display menu on the lower-left can be configured to show each item 
+    in a condensed display, providing a grid of graphs. To see this
+    display, choose "Grid Display" from the "View" menu.<p>
+
+<IMG SRC="./graphics/grid.gif" ALT="Grid display of items">
+<P><em>Figure 32: Grid display of items in data set.</em><p>
+
+<h3>Graph Lines</h3>
+The "Graph Lines" item in the "View" menu can be used to display graph 
+lines that cover the extent of the query and display spaces.<p>
+
+<h3>Inverting Colors</h3>
+The default TimeSearcher display uses white text and graph lines on a
+      black background. To see the displays shown in this manual
+      (black text on a white background) select "Invert Colors" from
+    the "View menu.<p>
+
+
+</BODY>
+</HTML>

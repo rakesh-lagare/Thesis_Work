@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<TITLE>TimeSearcher data file format</TITLE>
+<HEAD>
+<BODY><H1>TimeSearcher data file format</H1>
+<hr>
+<b><i><A HREF="http://www.cs.umd.edu/~hsh/">Harry
+Hochheiser</A></i></b>, <A
+HREF="mailto:hsh@cs.umd.edu">hsh@cs.umd.edu</A><br>
+TimeSearcher HomePage: <A
+HREF="http://www.cs.umd.edu/hcil/timesearcher">http://www.cs.umd.edu/hcil/timesearcher</A><br> 
+1 October Feb 2002 hsh@cs.umd.edu
+<HR>
+
+This document provides a quick overview of the .tqd data file format
+used to store data for use in TimeSearcher. Essentially a flat-file
+augmented with descriptive data, this format was developed for ease of 
+use and parsing.  Ideally, a more descriptive format using a more
+modern notations such as XML would be used instead, but development of 
+such a format is not particularly interesting from a research
+viewpoint.<p>
+
+Each line in a TimeSearcher data file is either a data line or a
+comment line. Comment lines are those that start with the pound ('#')
+character: these lines are purely for human reference, and are ignored 
+by the parser.<p>
+
+<h2>Header MetaData</H2>
+
+Each file consists of several pieces of meta data, each contained on a 
+separate line, and all specified in a set order.  Specifically, the
+following lines are required:<p>
+<UL>
+<LI>1.  Title - a title for the data set.
+
+<LI>2.  Static (unchanging) attributes for each item in a data set. These
+are the attributes of each item in the data set that do _not_ change
+over time.  Static attributes are provided in the form: "attribute
+name, attribute type; attribute name, attribute type." Possible Types
+are String, Float, and Int (for integer). Thus, for example, the line
+"Name,String;Country,String" implies two static variables, Name and
+Country, both having type "string".  
+        <pre>Name,String</pre><p>
+<LI>3. Dynamic attributes - those that do change over time, and therefore
+might be appropriate for searching using TimeSearcher. Thes attributes  
+are specified in the same format used for static attributes, but
+allowable value types are limited to Float and Int.  
+        <pre>Low,Float;High,Float</pre><p>
+
+<LI>4. The number of time points for each item in the database. Each item
+must have the same number of measurements.
+<LI>5. The number of items in the data set.
+<LI>6. Labels for the time points. There must be one value provided for
+each of the time points specified in example 6. These labels may be
+integers establishing a numeric order (1,2,3, etc.), floats, or strings
+(april,may,june,...). 
+</UL>
+<h2>Data Items</h2>
+
+The individual data items are found immediately after the header
+information. Each data item is specified on a single line, with fields
+delimited by  commas. The number of data item lines should be equal to 
+the value given in metadata line (5), as described above.<p>
+
+The first items are the static attributes of the data item, in the
+order specified by the "static attribute" meta data line. Thus, given
+the example of "name,country" given above, a possible start to a data
+item might be "Hochheiser,US,".<p>
+
+The dynamic attributes are found immediately after the static
+attributes. If the number of dynamic attributes (specified in line 3,
+above) is n, this line will contain all n values (in the order
+specified in line 3) for the first time point, followed by the values
+for the second time point, etc., up until the number of time points
+specified in item 4. For example: <p>
+<pre>AIRBORNE FREIGHT CORP,20.81,21.75,21.38,22.44,....</pre><p>
+
+In this example, there are two values for each time point - Low, and
+      High, as desciribed in item #3 above. Thus, 20.81 is the low
+      value at the first time point, 21.75 is the high value at that
+      timepoint, 21.38 is the low value for the second time point,
+      etc.<p>
+
+An example of the metadata and the first data line are given
+      below. Several example files are given in the "data" directory
+      in the TimeSearcher distribution:
+
+<pre>
+13 Months of High and Low prices
+# static attributes
+Name,String
+# Dynamic atts
+Low,Float;High,Float
+#  of time points=n
+13
+# of records k
+223
+# time point labels
+September,October,November,December,January,February,March,April,May,June,July,August,September
+#stat1, dynamic @ t1, dynamic @t2, ....,dynamic @tn
+# each dynamic are the v1, v2, ..vk @ time tj.
+AIRBORNE FREIGHT CORP,20.81,21.75,21.38,22.44,.....
+</pre><p>
+

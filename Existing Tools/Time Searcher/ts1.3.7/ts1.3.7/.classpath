@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="src" path="src"/>
+    <classpathentry kind="var" path="JRE_LIB" rootpath="JRE_SRCROOT" sourcepath="JRE_SRC"/>
+    <classpathentry kind="lib" path="lib/piccolo.jar"/>
+    <classpathentry kind="lib" path="lib/piccolox.jar"/>
+    <classpathentry kind="src" path="/piccolo"/>
+    <classpathentry kind="output" path="bin"/>
+</classpath>

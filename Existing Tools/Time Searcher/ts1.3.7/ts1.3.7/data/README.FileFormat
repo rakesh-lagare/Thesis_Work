@@ -1,0 +1,76 @@
+
+Notes on TimeSearcher data file format.
+3 December 2001 hsh@cs.umd.edu
+======================================
+
+revision history:
+3  December 2001 hsh@cs.umd.edu remove mention of Strings
+21 November 2001 hsh@cs.umd.edu original
+
+This document provides a quick overview of the .tqd data file format
+used to store data for use in TimeSearcher. Essentially a flat-file
+augmented with descriptive data, this format was developed for ease of 
+use and parsing.  Ideally, a more descriptive format using a more
+modern notations such as XML would be used instead, but development of 
+such a format is not particularly interesting from a research
+viewpoint.
+
+Each line in a TimeSearcher data file is either a data line or a
+comment line. Comment lines are those that start with the pound ('#')
+character: these lines are purely for human reference, and are ignored 
+by the parser.
+
+HEADER META DATA
+
+Each file consists of several pieces of meta data, each contained on a 
+separate line, and all specified in a set order.  Specifically, the
+following lines are required:
+
+1) Title - a title for the data set.
+
+2) Static (unchanging) attributes for each item in a data set. These
+are the attributes of each item in the data set that do _not_ change
+over time. 
+
+Static attributes are provided in the form:  
+        attribute name, attribute type; attribute name, attribute type.
+
+Possible Types are String, Float, and Int (for integer).
+
+Thus, for example, the line "Name,String;Country,String" implies two
+static variables, Name and Country, both having type "string".
+
+3) Dynamic attributes - those that do change over time, and therefore
+might be appropriate for searching using TimeSearcher. Thes attributes  
+are specified in the same format used for static attributes, but
+allowable value types are limited to Float and Int.  
+
+
+4) The number of time points for each item in the database. Each item
+must have the same number of measurements.
+
+5) The number of items in the data set.
+
+6) Labels for the time points. There must be one value provided for
+each of the time points specified in example 6. These labels may be
+integers establishing a numeric order (1,2,3, etc.), floats, or strings
+(april,may,june,...). 
+
+DATA ITEMS
+
+The individual data items are found immediately after the header
+information. Each data item is specified on a single line, with fields
+delimited by  commas. The number of data item lines should be equal to 
+the value given in metadata line (5), as described above.
+
+The first items are the static attributes of the data item, in the
+order specified by the "static attribute" meta data line. Thus, given
+the example of "name,country" given above, a possible start to a data
+item might be "Hochheiser,US,".
+
+The dynamic attributes are found immediately after the static
+attributes. If the number of dynamic attributes (specified in line 3,
+above) is n, this line will contain all n values (in the order
+specified in line 3) for the first time point, followed by the values
+for the second time point, etc., up until the number of time points
+specified in item 4.
