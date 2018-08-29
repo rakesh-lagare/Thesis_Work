@@ -70,7 +70,7 @@ def split(arr, size):
     
 i=0
 for n_val in sax_values:
-    print(x1[n_val])
+    #print(x1[n_val])
     print(n_val)
     keyy=sax_keys[i]
     print(keyy)
@@ -88,13 +88,13 @@ for n_val in sax_values:
     df = pd.DataFrame(nn)
     df.insert(loc=0, column='key', value=keyy)
     df.insert(loc=1, column='start', value=n_val)
-    print("df",df)
+    #print("df",df)
     
     
     if(i==0):   
-     df_res =df.copy()
+     df_sax =df.copy()
     else:
-     df_res=df_res.append(df, ignore_index=True)
+     df_sax=df_sax.append(df, ignore_index=True)
     
 
     
@@ -102,8 +102,8 @@ for n_val in sax_values:
     x3= list();
     for n2_val in x2:
         x3.append(n2_val)
-    #plt.plot(x3)
-    #plt.show()    
+    plt.plot(x3)
+    plt.show()    
         
        
 #end of for loop
@@ -111,25 +111,25 @@ for n_val in sax_values:
     
     
   
-lenth= len(df_res)
-df_new= df_res.drop(columns=['key', 'start'])
+lenth= len(df_sax)
+df_temp= df_sax.drop(columns=['key', 'start'])
 for i in range(0,lenth-1):
     for j in (range( i+1,lenth)):
-        key1=df_res.iloc[i]['key']
-        key2=df_res.iloc[j]['key']
+        key1=df_sax.iloc[i]['key']
+        key2=df_sax.iloc[j]['key']
         if(key1==key2):
-         row1= df_new.iloc[[i]].values[0]
-         row2= df_new.iloc[[j]].values[0]
-         mm= np.linalg.norm(row1-row2)
-         l1=([row1,row2,mm,key1])
+         row1= df_temp.iloc[[i]].values[0]
+         row2= df_temp.iloc[[j]].values[0]
+         eucl_dist= np.linalg.norm(row1-row2)
+         l1=([key1,row1,row2,eucl_dist])
          if(i==0 and j==1):
-          df1= pd.DataFrame([l1])
+          df_eucl_dist= pd.DataFrame([l1])
          else:
-          df1=  df1.append([l1], ignore_index=True)
+          df_eucl_dist=df_eucl_dist.append([l1], ignore_index=True)
         
 
-op= df1.groupby(3).max()
-op1= df1.sort_values(by=[3])
+max_motif= df_eucl_dist.groupby(0).max()
+sorted_motif= df_eucl_dist.sort_values(by=[3])
 
 
 
