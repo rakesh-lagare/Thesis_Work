@@ -25,6 +25,8 @@ x1 = x1.astype(np.float)
 
 
 
+
+
 #x1 = x1 / np.linalg.norm(x1)
 x1 = (x1-min(x1))/(max(x1)-min(x1))
 #normalized_X = preprocessing.normalize(x1)
@@ -80,7 +82,9 @@ def Euclidean_Dist(df):
     
     
 i=0
-df1 = pd.DataFrame(columns=['A','B','C','D'])
+
+
+
 for n_val in sax_values:
     print(x1[n_val])
     print(n_val)
@@ -98,6 +102,7 @@ for n_val in sax_values:
     x3= list();
     
     nn=split(x2,3)
+    
     df = pd.DataFrame(nn)
     df.insert(loc=0, column='key', value=keyy)
     print("df",df)
