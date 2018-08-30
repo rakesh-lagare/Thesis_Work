@@ -1,41 +1,54 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Aug 26 16:28:05 2018
+Created on Thu Aug 28 16:28:33 2018
 
 @author: Rakesh
 """
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from saxpy.hotsax import find_discords_hotsax
-from saxpy.paa import paa
-from saxpy.sax import sax_via_window
-from saxpy.sax import sax_by_chunking
-from sklearn.preprocessing import normalize
-from saxpy.distance import euclidean
-from sklearn import preprocessing
 import math
+import matplotlib.pyplot as plt
+from collections import defaultdict
+from saxpy.strfunc import idx2letter
+from saxpy.znorm import znorm
+from saxpy.paa import paa
+from saxpy.alphabet import cuts_for_asize
+from saxpy.sax import ts_to_string
+from saxpy.sax import is_mindist_zero
+from saxpy.hotsax import find_discords_hotsax
 import os
 
-
-data2 =  pd.read_csv('car_sales.csv', sep=',', header=None)
-
-x1 = data2.iloc[1:,1].values.flatten()  # pick a random sample from class 0
-x1 = x1.astype(np.float)
+# Retrieve current working directory (`cwd`)
 
 
 
+def sax_via_half_segment(series, win_size, paa_size, alphabet_size=3, nr_strategy='exact', z_threshold=0.01):
+    """Simple via window conversion implementation."""
+    cuts = cuts_for_asize(alphabet_size)
+    sax = defaultdict(list)
+
+    
+    curr_count=0
+    seg_size=(paa_size//2)+1
+    i=0
+    while(curr_count < len(series)-win_size+seg_size):
+        
+        sub_section = series[curr_count:(curr_count+win_size)]
+        
+        zn = znorm(sub_section, z_threshold)
+
+        paa_rep = paa(zn, paa_size)
+
+        curr_word = ts_to_string(paa_rep, cuts)
 
 
+        sax[curr_word].append(i)
+    
+        i=i+1
+        curr_count=curr_count+seg_size
 
-#x1 = x1 / np.linalg.norm(x1)
-x1 = (x1-min(x1))/(max(x1)-min(x1))
-#normalized_X = preprocessing.normalize(x1)
-
-
-plt.plot(x1)
-plt.show()
+    return sax
 
 
 window_size=10
@@ -44,17 +57,23 @@ alphabet_size=3
 nr_strategy="exact"
 z_threshold=0.01
 
+data2 =  pd.read_csv('car_sales.csv', sep=',', header=None)
 
+x1 = data2.iloc[1:,1].values.flatten()  # pick a random sample from class 0
+x1 = x1.astype(np.float)
+
+x1 = (x1-min(x1))/(max(x1)-min(x1))
 #sax_via_window(data, win_size(segmentation), paa_size(word_size), alphabet_size,nr_strategy='exact', z_threshold=0.01):
 
-sax_window = sax_via_window(x1, window_size, word_size, alphabet_size,nr_strategy, z_threshold)
+sax_half_segment = sax_via_half_segment(x1, window_size, word_size, alphabet_size,nr_strategy, z_threshold)
 
-sax_keys =list(sax_window.keys())
-sax_values =list(sax_window.values())
+
+sax_keys =list(sax_half_segment.keys())
+sax_values =list(sax_half_segment.values())
 
 elements_num = 0
-for key in sax_window:
-   elements_num += len(sax_window[key])
+for key in sax_half_segment:
+   elements_num += len(sax_half_segment[key])
 elements_num
 
 
@@ -105,15 +124,9 @@ for n_val in sax_values:
     for n2_val in x2:
         x3.append(n2_val)
     plt.plot(x3)
-    plt.savefig('./Output/sliding_window/' +keyy+'.png')
-    plt.show()    
-        
-       
-#end of for loop
+    plt.savefig('./Output/sliding_half_segment/' +keyy+'.png')
+    plt.show()  
     
-    
-    
-  
 lenth= len(df_sax)
 df_temp= df_sax.drop(columns=['key', 'start'])
 for i in range(0,lenth-1):
@@ -135,18 +148,20 @@ for i in range(0,lenth-1):
 max_motif= df_eucl_dist.groupby(0).max()
 sorted_motif= df_eucl_dist.sort_values(by=[3])
 
+
 #find_discords_hotsax(series, win_size, num_discords, a_size,paa_size, z_threshold=0.01)
 discords= find_discords_hotsax(x1, window_size, 5)
 discords= pd.DataFrame(discords)
 
 cwd = os.getcwd()
-os.chdir('./Output/sliding_window/')
-file = 'sax_via_sliding_window.xlsx'
+os.chdir('./Output/sliding_half_segment/')
+file = 'sax_via_half_segment.xlsx'
 writer = pd.ExcelWriter(file, engine='xlsxwriter')
 
-df_all_sax=pd.DataFrame([sax_window])
+df_all_sax=pd.DataFrame([sax_half_segment])
 df_all_sax.to_excel(writer, 'sax')
 df_sax.to_excel(writer, 'sax_extended')
 df_eucl_dist.to_excel(writer, 'euclidean_dist')
 max_motif.to_excel(writer, 'max_motif')
-discords.to_excel(writer, 'top_discords')
+discords.to_excel(writer, 'top_discords') 
+    
