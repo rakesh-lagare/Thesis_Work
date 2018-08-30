@@ -17,9 +17,8 @@ import math
 import os
 
 
-def sax_via_batch(series, win_size, paa_size, alphabet_size=3,
-                   nr_strategy='none', z_threshold=0.01):
-    """Simple via window conversion implementation."""
+def sax_via_batch(series, win_size, paa_size, alphabet_size=3,nr_strategy='none', z_threshold=0.01):
+    
     cuts = cuts_for_asize(alphabet_size)
     sax = defaultdict(list)
 

@@ -24,7 +24,6 @@ import os
 
 
 def sax_via_half_segment(series, win_size, paa_size, alphabet_size=3, nr_strategy='exact', z_threshold=0.01):
-    """Simple via window conversion implementation."""
     cuts = cuts_for_asize(alphabet_size)
     sax = defaultdict(list)
 
