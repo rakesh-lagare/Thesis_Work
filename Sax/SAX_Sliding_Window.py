@@ -21,8 +21,10 @@ import os
 
 data2 =  pd.read_csv('car_sales.csv', sep=',', header=None)
 
-x1 = data2.iloc[1:,1].values.flatten()  # pick a random sample from class 0
-x1 = x1.astype(np.float)
+x1 = data2.iloc[1:,1].values.flatten() 
+#x1=np.array([x1])
+x1=np.asfarray(x1,float)
+#x1 = float(x1)
 
 
 

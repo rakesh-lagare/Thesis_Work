@@ -32,7 +32,7 @@ def sax_via_batch(series, win_size, paa_size, alphabet_size=3,nr_strategy='none'
         
         #sub_section = series[i:(i+win_size)]
         sub_section = series[curr_count:next_count]
-        print(sub_section)
+        
         zn = znorm(sub_section, z_threshold)
 
         paa_rep = paa(zn, paa_size)
