@@ -32,7 +32,7 @@ x1=np.asfarray(x1,float)
 
 
 #x1 = x1 / np.linalg.norm(x1)
-x1 = (x1-min(x1))/(max(x1)-min(x1))
+#x1 = (x1-min(x1))/(max(x1)-min(x1))
 #normalized_X = preprocessing.normalize(x1)
 
 
@@ -71,7 +71,7 @@ def split(arr, size):
 
 
 
-    
+  
 i=0
 for n_val in sax_values:
     #print(x1[n_val])
@@ -106,7 +106,11 @@ for n_val in sax_values:
     x3= list();
     for n2_val in x2:
         x3.append(n2_val)
-    plt.plot(x3)
+    plt.plot(x1)
+    #plt.axvline(x=)
+    plt.axvline(n1_val,c='r')
+    #plt.plot(x1)
+    plt.axvline(n1_val+2,c='r')
     plt.savefig('./Output/sliding_window/' +keyy+'.png')
     plt.show()    
         
@@ -114,7 +118,7 @@ for n_val in sax_values:
 #end of for loop
     
     
-    
+ 
   
 lenth= len(df_sax)
 df_temp= df_sax.drop(columns=['key', 'start'])

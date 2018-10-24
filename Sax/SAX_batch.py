@@ -32,12 +32,14 @@ def sax_via_batch(series, win_size, paa_size, alphabet_size=3,nr_strategy='none'
         
         #sub_section = series[i:(i+win_size)]
         sub_section = series[curr_count:next_count]
+        #print(sub_section)
         
         zn = znorm(sub_section, z_threshold)
 
         paa_rep = paa(zn, paa_size)
 
         curr_word = ts_to_string(paa_rep, cuts)
+        print(curr_word)
 
 
         sax[curr_word].append(i)
@@ -87,9 +89,9 @@ def split(arr, size):
 i=0
 for n_val in sax_values:
     #print(x1[n_val])
-    print(n_val)
+    #print(n_val)
     keyy=sax_keys[i]
-    print(keyy)
+    #print(keyy)
     x2= list();
     
     for n1_val in n_val:
@@ -118,9 +120,9 @@ for n_val in sax_values:
     x3= list();
     for n2_val in x2:
         x3.append(n2_val)
-    plt.plot(x3)
-    plt.savefig('./Output/batch/' +keyy+'.png')
-    plt.show() 
+    #plt.plot(x3)
+   # plt.savefig('./Output/batch/' +keyy+'.png')
+    #plt.show() 
     
     
     

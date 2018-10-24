@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Thu Aug 28 16:28:33 2018
 
@@ -8,73 +7,47 @@ Created on Thu Aug 28 16:28:33 2018
 import numpy as np
 import pandas as pd
 import math
+import os
 import matplotlib.pyplot as plt
 from collections import defaultdict
-from saxpy.strfunc import idx2letter
-from saxpy.znorm import znorm
-from saxpy.paa import paa
-from saxpy.alphabet import cuts_for_asize
-from saxpy.sax import ts_to_string
-from saxpy.sax import is_mindist_zero
-from saxpy.hotsax import find_discords_hotsax
-import os
-
-# Retrieve current working directory (`cwd`)
+import matplotlib
 
 
 
-def sax_via_half_segment(series, win_size, paa_size, alphabet_size=3, nr_strategy='exact', z_threshold=0.01):
-    cuts = cuts_for_asize(alphabet_size)
-    sax = defaultdict(list)
-
-    
-    curr_count=0
-    seg_size=(paa_size//2)+1
-    i=0
-    while(curr_count < len(series)-win_size+seg_size):
-        
-        sub_section = series[curr_count:(curr_count+win_size)]
-        
-        zn = znorm(sub_section, z_threshold)
-
-        paa_rep = paa(zn, paa_size)
-
-        curr_word = ts_to_string(paa_rep, cuts)
+"""-------------     import Data     -------------"""
 
 
-        sax[curr_word].append(i)
-    
-        i=i+1
-        curr_count=curr_count+seg_size
+file_name='ecg.csv'
+data2 =  pd.read_csv(file_name, sep=',', header=None)
 
-    return sax
+x1 = data2.iloc[1:,1].values.flatten() 
+x1 = x1.astype(np.float)
 
 
-window_size=10
-word_size=3
-alphabet_size=3
-nr_strategy="exact"
-z_threshold=0.01
-
+"""
 data2 =  pd.read_csv('car_sales.csv', sep=',', header=None)
 
 x1 = data2.iloc[1:,1].values.flatten()  # pick a random sample from class 0
 x1 = x1.astype(np.float)
 
-x1 = (x1-min(x1))/(max(x1)-min(x1))
-#sax_via_window(data, win_size(segmentation), paa_size(word_size), alphabet_size,nr_strategy='exact', z_threshold=0.01):
-
-sax_half_segment = sax_via_half_segment(x1, window_size, word_size, alphabet_size,nr_strategy, z_threshold)
 
 
-sax_keys =list(sax_half_segment.keys())
-sax_values =list(sax_half_segment.values())
+data2 =  pd.read_csv('car_sales.csv', sep=',', header=None)
 
-elements_num = 0
-for key in sax_half_segment:
-   elements_num += len(sax_half_segment[key])
-elements_num
+x1 = data2.iloc[1:,1].values.flatten() 
+#x1=np.array([x1])
+x1=np.asfarray(x1,float)
+"""
 
+
+"""-------------     Intialization     ------------- """
+y_alphabet_size=4
+word_lenth=3
+window_size=5
+skip_offset=1
+
+
+"""-------------     Helper Functions     ------------- """
 
 def split(arr, size):
      arrs = []
@@ -86,28 +59,360 @@ def split(arr, size):
      return arrs
 
 
+"""-------------     Y-axis Distribution      ------------- """
+y_alphabets= np.linspace(0, 1, y_alphabet_size+1)[1:]
+y_alphabets = y_alphabets.tolist()
+
+
+
+
+"""-------------     X-axis Distribution      ------------- """
+
+def x_distrubted_values(series):
+    mean=np.mean(series)
+    #median=sorted(series)[len(series) // 2]
+    return mean
+
+
+
+
+"""-------------     Index to Letter conversion      ------------- """    
+
+def index_to_letter(idx):
+    """Convert a numerical index to a char."""
+    if 0 <= idx < 20:
+        return chr(97 + idx)
+    else:
+        raise ValueError('A wrong idx value supplied.')
+
+
+
+
+"""-------------     Normalize Data      ------------- """    
+x1 = (x1-min(x1))/(max(x1)-min(x1))
+plt.plot(x1)
+plt.show()
+
+
+
+
+"""-------------     Segmentation      ------------- """    
+
+def segment_ts(series,windowSize=window_size,skip_offset=skip_offset):
+    ts_len=len(x1)
+    mod = ts_len%windowSize
+    ts_len=int((ts_len-mod-windowSize)/skip_offset)
+    curr_count=0
+    sax = defaultdict(list)
+    alphas=list()
+    alpha_idx=list()
+    alp=""
+    for i in range(0, ts_len):
+        sub_section = series[curr_count:(curr_count+windowSize)]
+        curr_count=curr_count+skip_offset
+        curr_word=alphabetize_ts(sub_section) 
+        #plt.plot(sub_section)
+        #plt.show()
+       
+        alphas.extend(curr_word)
+        alpha_idx.append(i)
+        sax[curr_word].append(i)
+        alp+=str(curr_word)
+    
 
     
+    #alpha_dict = pd.DataFrame(
+    #{'alphas': alphas,
+     #'alpha_index': alpha_idx
+    #})
+    
+    return alp   
+          
+
+"""-------------     Alphabetize      ------------- """    
+
+def alphabetize_ts(sub_section):
+    mean_val=x_distrubted_values(sub_section)
+    y_alpha_val=min(y_alphabets, key=lambda x:abs(x-mean_val))
+    y_alpha_idx=y_alphabets.index(y_alpha_val)
+    curr_word = index_to_letter(y_alpha_idx)
+    
+    return(curr_word)
+
+alphabetize= segment_ts(x1)
+
+"""-------------     Complete Words      ------------- """    
+def complete_word(series=x1,word_len=word_lenth,skip_len=0):
+    alphabetize= segment_ts(series)
+    complete_word=list()
+    for i in range(0, len(alphabetize)):
+    	complete_word.append(alphabetize[i:i + word_len])
+    
+    
+    for i in complete_word:
+        if(len(i) != word_len):
+            complete_word.remove(i)
+    
+    return complete_word
+
+
+comp_word=complete_word()
+
+
+
+"""-------------     Simlliar Words      ------------- """    
+def simillar_words():
+    simlliarWords= complete_word()
+    sax = defaultdict(list)
+    for i in range(0,len(simlliarWords)):
+       
+        if(len(simlliarWords[i])==word_lenth):
+            for j in (range( i,len(simlliarWords))):
+                key1=simlliarWords[i]
+                key2=simlliarWords[j]
+                if(key1==key2):
+                    sax[key1].append(i)
+              
+    for k, v in sax.items():
+        new_list = []
+        for item in v:
+            if item not in new_list :
+                new_list.append(item)
+        sax[k] = new_list
+            #print(sax)
+        
+    return sax
+
+
+
+simillar_word=simillar_words()
+
+
+def distance_calculatation(df,key):
+    width= len(df[0])
+    mat = [[0 for x in range(width)] for y in range(width)]
+    if(width>=3):
+        for i in range(len(df)):
+            for j in range(len(df)):
+                row1= df.iloc[[i]].values[0]
+                row2= df.iloc[[j]].values[0]
+                eucl_dist= np.linalg.norm(row1-row2)
+                eucl_dist= eucl_dist/math.sqrt((word_lenth))
+                mat[i][j]=round(eucl_dist,2)
+        print(mat)
+
+def visualize(start,alph_size,data ):
+    plt.plot(x1)
+    plt.plot(range(start,start+alph_size),data)
+    plt.show()
+    
+    
+"""-------------     Euclidean Distance      ------------- """ 
+def  dist_matrix ():
+    i=0
+    simillar_word=simillar_words()
+    sax_keys =list(simillar_word.keys())
+    sax_values =list(simillar_word.values())
+    alphabet_size=window_size+word_lenth-1
+    for n_val in sax_values:
+        keyy=sax_keys[i]
+        x2= list();
+        sum_alpha_list=list()
+        for n1_val in n_val:
+            slice_range=slice(n1_val,n1_val+alphabet_size)
+            slice_data = x1[slice_range]
+            print(keyy)
+            #visualize(n1_val,alphabet_size,slice_data)
+            alpha_count=0
+            while (alpha_count < alphabet_size):
+                x2.append(x1[n1_val+alpha_count])
+                alpha_count=alpha_count+1
+        
+        temp_list=split(x2,alphabet_size)
+        temp_df = pd.DataFrame(temp_list)
+        #distance_calculatation(temp_df,keyy)
+    
+        for j in range(0,len(temp_list)):
+            sum_alphas=sum(temp_list[j])
+            sum_alpha_list.append(sum_alphas)
+            
+            
+        #print(keyy)
+        #plt.plot(x1)
+        plt.plot(x2)
+        plt.show()
+        
+        temp_df.insert(loc=0, column='key', value=keyy)
+        temp_df.insert(loc=1, column='start', value=n_val)
+        temp_df.insert(loc=2, column='sum', value=sum_alpha_list)
+    
+    
+        if(i==0):   
+            df_sax =temp_df.copy()
+        else:
+            df_sax=df_sax.append(temp_df, ignore_index=True)
+            
+        i=i+1
+        
+    return df_sax
+
+
+
+
+
+sax=dist_matrix()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+
+df_temp= sax.drop(columns=['key', 'start','sum'])
+
+for i in range(len(sax)-1):
+    for j in range(i+1,len(sax)):
+        mat=list()
+        key1=sax.iloc[i]['key']
+        key2=sax.iloc[j]['key']
+        if(key1==key2):
+         #print(key1,key2)
+         row1= df_temp.iloc[[i]].values[0]
+         row2= df_temp.iloc[[j]].values[0]
+         #print(row1,row2)
+         eucl_dist= np.linalg.norm(row1-row2)
+         eucl_dist= eucl_dist/math.sqrt((word_lenth))
+         #mat = eucl_dist
+
+
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+sax_keys =list(simillar_word.keys())
+sax_values =list(simillar_word.values())
+
+
+
+
 i=0
+alphabet_size=5*3 #alphabet size * word length
 for n_val in sax_values:
     #print(x1[n_val])
-    print(n_val)
+    #print(n_val)
     keyy=sax_keys[i]
-    print(keyy)
+    #print(keyy)
     x2= list();
-    
+    sum_alpha_list=list()
+    sum_alphas=0
     for n1_val in n_val:
         #print(x1[n1_val], ",",x1[n1_val+1],",",x1[n1_val+2] )
         alpha_count=0
         while (alpha_count < alphabet_size):
             x2.append(x1[n1_val+alpha_count])
             alpha_count=alpha_count+1
+            
    
     
     nn=split(x2,alphabet_size)
     df = pd.DataFrame(nn)
+    
+    for j in range(0,len(nn)):
+        sum_alphas=sum(nn[j])
+        print(sum_alphas)
+        sum_alpha_list.append(sum_alphas)
+    #print(sum_alphas)
     df.insert(loc=0, column='key', value=keyy)
     df.insert(loc=1, column='start', value=n_val)
+    df.insert(loc=2, column='sum', value=sum_alpha_list)
     #print("df",df)
     
     
@@ -122,45 +427,14 @@ for n_val in sax_values:
     x3= list();
     for n2_val in x2:
         x3.append(n2_val)
-    plt.plot(x3)
-    plt.savefig('./Output/sliding_half_segment/' +keyy+'.png')
-    plt.show()  
-    
-lenth= len(df_sax)
-df_temp= df_sax.drop(columns=['key', 'start'])
-for i in range(0,lenth-1):
-    for j in (range( i+1,lenth)):
-        key1=df_sax.iloc[i]['key']
-        key2=df_sax.iloc[j]['key']
-        if(key1==key2):
-         row1= df_temp.iloc[[i]].values[0]
-         row2= df_temp.iloc[[j]].values[0]
-         eucl_dist= np.linalg.norm(row1-row2)
-         eucl_dist= eucl_dist/math.sqrt((word_size))
-         l1=([key1,row1,row2,eucl_dist])
-         if(i==0 and j==1):
-          df_eucl_dist= pd.DataFrame([l1])
-         else:
-          df_eucl_dist=df_eucl_dist.append([l1], ignore_index=True)
         
-
-max_motif= df_eucl_dist.groupby(0).max()
-sorted_motif= df_eucl_dist.sort_values(by=[3])
-
-
-#find_discords_hotsax(series, win_size, num_discords, a_size,paa_size, z_threshold=0.01)
-discords= find_discords_hotsax(x1, window_size, 5)
-discords= pd.DataFrame(discords)
-
-cwd = os.getcwd()
-os.chdir('./Output/sliding_half_segment/')
-file = 'sax_via_half_segment.xlsx'
-writer = pd.ExcelWriter(file, engine='xlsxwriter')
-
-df_all_sax=pd.DataFrame([sax_half_segment])
-df_all_sax.to_excel(writer, 'sax')
-df_sax.to_excel(writer, 'sax_extended')
-df_eucl_dist.to_excel(writer, 'euclidean_dist')
-max_motif.to_excel(writer, 'max_motif')
-discords.to_excel(writer, 'top_discords') 
+    #plt.plot(x1)
+    #plt.axvline(n1_val,c='r')
+   
     
+    
+    #plt.axvline(n1_val+2,c='r')
+    #plt.savefig('./Output/sliding_window/' +keyy+'.png')
+    #plt.show()   
+    
+"""   
