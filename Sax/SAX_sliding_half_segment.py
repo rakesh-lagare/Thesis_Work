@@ -15,8 +15,7 @@ import matplotlib
 
 
 """-------------     import Data     -------------"""
-
-
+"""
 file_name='ecg.csv'
 data2 =  pd.read_csv(file_name, sep=',', header=None)
 
@@ -25,19 +24,16 @@ x1 = x1.astype(np.float)
 
 
 """
-data2 =  pd.read_csv('car_sales.csv', sep=',', header=None)
-
-x1 = data2.iloc[1:,1].values.flatten()  # pick a random sample from class 0
-x1 = x1.astype(np.float)
-
-
 
 data2 =  pd.read_csv('car_sales.csv', sep=',', header=None)
 
 x1 = data2.iloc[1:,1].values.flatten() 
-#x1=np.array([x1])
 x1=np.asfarray(x1,float)
-"""
+
+
+
+
+
 
 
 """-------------     Intialization     ------------- """
@@ -59,10 +55,35 @@ def split(arr, size):
      return arrs
 
 
+
+
+def distance_calculatation(df,key):
+    width= len(df[0])
+    mat = [[0 for x in range(width)] for y in range(width)]
+    if(width>=3):
+        for i in range(len(df)):
+            for j in range(len(df)):
+                row1= df.iloc[[i]].values[0]
+                row2= df.iloc[[j]].values[0]
+                eucl_dist= np.linalg.norm(row1-row2)
+                eucl_dist= eucl_dist/math.sqrt((word_lenth))
+                mat[i][j]=round(eucl_dist,2)
+        print(mat)
+
+
+
+def visualize(start,alph_size,data ):
+    plt.plot(x1)
+    plt.plot(range(start,start+alph_size),data)
+    plt.show()
+
+
+
+
+
 """-------------     Y-axis Distribution      ------------- """
 y_alphabets= np.linspace(0, 1, y_alphabet_size+1)[1:]
 y_alphabets = y_alphabets.tolist()
-
 
 
 
@@ -110,6 +131,7 @@ def segment_ts(series,windowSize=window_size,skip_offset=skip_offset):
     for i in range(0, ts_len):
         sub_section = series[curr_count:(curr_count+windowSize)]
         curr_count=curr_count+skip_offset
+        #print(range(curr_count,curr_count+windowSize))
         curr_word=alphabetize_ts(sub_section) 
         #plt.plot(sub_section)
         #plt.show()
@@ -139,7 +161,9 @@ def alphabetize_ts(sub_section):
     
     return(curr_word)
 
+
 alphabetize= segment_ts(x1)
+len(alphabetize)
 
 """-------------     Complete Words      ------------- """    
 def complete_word(series=x1,word_len=word_lenth,skip_len=0):
@@ -163,15 +187,22 @@ comp_word=complete_word()
 """-------------     Simlliar Words      ------------- """    
 def simillar_words():
     simlliarWords= complete_word()
+    per=int(len(x1)*25/100)
+    print(per)
     sax = defaultdict(list)
     for i in range(0,len(simlliarWords)):
+        key1=simlliarWords[i]
        
         if(len(simlliarWords[i])==word_lenth):
-            for j in (range( i,len(simlliarWords))):
-                key1=simlliarWords[i]
-                key2=simlliarWords[j]
-                if(key1==key2):
-                    sax[key1].append(i)
+            sax[key1].append(skip_offset*(i))
+            #for j in (range( i,len(simlliarWords))):
+                #key1=simlliarWords[i]
+                #key2=simlliarWords[j]
+                #cnt=0
+                #if(key1==key2):
+                    #cnt+=1
+                    #sax[key1].append(skip_offset*(i))
+                    #sax[key1].append(i)
               
     for k, v in sax.items():
         new_list = []
@@ -187,25 +218,7 @@ def simillar_words():
 
 simillar_word=simillar_words()
 
-
-def distance_calculatation(df,key):
-    width= len(df[0])
-    mat = [[0 for x in range(width)] for y in range(width)]
-    if(width>=3):
-        for i in range(len(df)):
-            for j in range(len(df)):
-                row1= df.iloc[[i]].values[0]
-                row2= df.iloc[[j]].values[0]
-                eucl_dist= np.linalg.norm(row1-row2)
-                eucl_dist= eucl_dist/math.sqrt((word_lenth))
-                mat[i][j]=round(eucl_dist,2)
-        print(mat)
-
-def visualize(start,alph_size,data ):
-    plt.plot(x1)
-    plt.plot(range(start,start+alph_size),data)
-    plt.show()
-    
+   
     
 """-------------     Euclidean Distance      ------------- """ 
 def  dist_matrix ():
@@ -213,7 +226,7 @@ def  dist_matrix ():
     simillar_word=simillar_words()
     sax_keys =list(simillar_word.keys())
     sax_values =list(simillar_word.values())
-    alphabet_size=window_size+word_lenth-1
+    alphabet_size=window_size+(skip_offset*(word_lenth-1))
     for n_val in sax_values:
         keyy=sax_keys[i]
         x2= list();
@@ -221,7 +234,7 @@ def  dist_matrix ():
         for n1_val in n_val:
             slice_range=slice(n1_val,n1_val+alphabet_size)
             slice_data = x1[slice_range]
-            print(keyy)
+            #print(keyy)
             #visualize(n1_val,alphabet_size,slice_data)
             alpha_count=0
             while (alpha_count < alphabet_size):
@@ -239,8 +252,8 @@ def  dist_matrix ():
             
         #print(keyy)
         #plt.plot(x1)
-        plt.plot(x2)
-        plt.show()
+        #plt.plot(x2)
+        #plt.show()
         
         temp_df.insert(loc=0, column='key', value=keyy)
         temp_df.insert(loc=1, column='start', value=n_val)
