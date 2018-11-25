@@ -16,14 +16,14 @@ import matplotlib
 
 """-------------     import Data     -------------"""
 """
-file_name='ecg.csv'
+file_name='test_data2.csv'
 data2 =  pd.read_csv(file_name, sep=',', header=None)
 
 x1 = data2.iloc[1:,1].values.flatten() 
 x1 = x1.astype(np.float)
-
-
 """
+
+
 
 data2 =  pd.read_csv('car_sales.csv', sep=',', header=None)
 
@@ -39,7 +39,7 @@ x1=np.asfarray(x1,float)
 """-------------     Intialization     ------------- """
 y_alphabet_size=4
 word_lenth=3
-window_size=5
+window_size=10
 skip_offset=1
 
 
@@ -70,14 +70,14 @@ def distance_calculatation(df,key):
                 mat[i][j]=round(eucl_dist,2)
         print(mat)
 
-
+"""
 
 def visualize(start,alph_size,data ):
     plt.plot(x1)
     plt.plot(range(start,start+alph_size),data)
     plt.show()
 
-
+"""
 
 
 
@@ -131,23 +131,12 @@ def segment_ts(series,windowSize=window_size,skip_offset=skip_offset):
     for i in range(0, ts_len):
         sub_section = series[curr_count:(curr_count+windowSize)]
         curr_count=curr_count+skip_offset
-        #print(range(curr_count,curr_count+windowSize))
         curr_word=alphabetize_ts(sub_section) 
-        #plt.plot(sub_section)
-        #plt.show()
-       
         alphas.extend(curr_word)
         alpha_idx.append(i)
         sax[curr_word].append(i)
         alp+=str(curr_word)
-    
 
-    
-    #alpha_dict = pd.DataFrame(
-    #{'alphas': alphas,
-     #'alpha_index': alpha_idx
-    #})
-    
     return alp   
           
 
@@ -170,9 +159,7 @@ def complete_word(series=x1,word_len=word_lenth,skip_len=0):
     alphabetize= segment_ts(series)
     complete_word=list()
     for i in range(0, len(alphabetize)):
-    	complete_word.append(alphabetize[i:i + word_len])
-    
-    
+    	complete_word.append(alphabetize[i:i + word_len]) 
     for i in complete_word:
         if(len(i) != word_len):
             complete_word.remove(i)
@@ -187,73 +174,75 @@ comp_word=complete_word()
 """-------------     Simlliar Words      ------------- """    
 def simillar_words():
     simlliarWords= complete_word()
-    per=int(len(x1)*25/100)
-    print(per)
     sax = defaultdict(list)
     for i in range(0,len(simlliarWords)):
-        key1=simlliarWords[i]
-       
         if(len(simlliarWords[i])==word_lenth):
-            sax[key1].append(skip_offset*(i))
-            #for j in (range( i,len(simlliarWords))):
-                #key1=simlliarWords[i]
-                #key2=simlliarWords[j]
-                #cnt=0
-                #if(key1==key2):
-                    #cnt+=1
-                    #sax[key1].append(skip_offset*(i))
-                    #sax[key1].append(i)
-              
-    for k, v in sax.items():
-        new_list = []
-        for item in v:
-            if item not in new_list :
-                new_list.append(item)
-        sax[k] = new_list
-            #print(sax)
+            sax[simlliarWords[i]].append(skip_offset*(i))
         
-    return sax
+    return sax  
 
 
 
 simillar_word=simillar_words()
+
+
+
+def visualize(data,alph_size,lent ):
+    row=int(lent/4)
+    
+    print(row)
+    if(row > 1):
+        fig = plt.figure(figsize=(4*row, 5*row))
+        for i in range(0,lent):
+            ax = fig.add_subplot(row+1, 4,i+1 )
+            #plt.plot(x1)
+            nData=data[i*alph_size:((i+1)*alph_size)]
+            plt.plot(nData)
+    else:
+        fig = plt.figure(figsize=(4*3, 5*3))
+        for i in range(0,lent):
+            ax = fig.add_subplot(5, 2,i+1 )
+            plt.plot(data)
+    plt.show()   
+     
+
 
    
     
 """-------------     Euclidean Distance      ------------- """ 
 def  dist_matrix ():
     i=0
+    per=int(len(x1)*25/100)
+    #print(per)
     simillar_word=simillar_words()
     sax_keys =list(simillar_word.keys())
     sax_values =list(simillar_word.values())
     alphabet_size=window_size+(skip_offset*(word_lenth-1))
     for n_val in sax_values:
         keyy=sax_keys[i]
+        #print(len(n_val ))
+        
         x2= list();
         sum_alpha_list=list()
         for n1_val in n_val:
-            slice_range=slice(n1_val,n1_val+alphabet_size)
-            slice_data = x1[slice_range]
-            #print(keyy)
+            #slice_range=slice(n1_val,n1_val+alphabet_size)
+            #slice_data = x1[slice_range]
             #visualize(n1_val,alphabet_size,slice_data)
             alpha_count=0
             while (alpha_count < alphabet_size):
                 x2.append(x1[n1_val+alpha_count])
                 alpha_count=alpha_count+1
+        visualize(x2,alphabet_size,len(n_val ))
         
+        #print(x2)
         temp_list=split(x2,alphabet_size)
         temp_df = pd.DataFrame(temp_list)
-        #distance_calculatation(temp_df,keyy)
+        distance_calculatation(temp_df,keyy) 
     
         for j in range(0,len(temp_list)):
             sum_alphas=sum(temp_list[j])
             sum_alpha_list.append(sum_alphas)
             
-            
-        #print(keyy)
-        #plt.plot(x1)
-        #plt.plot(x2)
-        #plt.show()
         
         temp_df.insert(loc=0, column='key', value=keyy)
         temp_df.insert(loc=1, column='start', value=n_val)
