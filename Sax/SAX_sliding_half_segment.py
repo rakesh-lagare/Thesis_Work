@@ -11,7 +11,7 @@ import os
 import matplotlib.pyplot as plt
 from collections import defaultdict
 import matplotlib
-
+from sklearn.metrics.pairwise import euclidean_distances    
 
 
 """-------------     import Data     -------------"""
@@ -25,7 +25,7 @@ x1 = x1.astype(np.float)
 
 
 
-data2 =  pd.read_csv('car_sales.csv', sep=',', header=None)
+data2 =  pd.read_csv('ecg.csv', sep=',', header=None)
 
 x1 = data2.iloc[1:,1].values.flatten() 
 x1=np.asfarray(x1,float)
@@ -33,14 +33,11 @@ x1=np.asfarray(x1,float)
 
 
 
-
-
-
 """-------------     Intialization     ------------- """
 y_alphabet_size=4
 word_lenth=3
-window_size=10
-skip_offset=1
+window_size=8
+skip_offset=5
 
 
 """-------------     Helper Functions     ------------- """
@@ -55,35 +52,42 @@ def split(arr, size):
      return arrs
 
 
-
-
-def distance_calculatation(df,key):
-    width= len(df[0])
-    mat = [[0 for x in range(width)] for y in range(width)]
-    if(width>=3):
-        for i in range(len(df)):
-            for j in range(len(df)):
-                row1= df.iloc[[i]].values[0]
-                row2= df.iloc[[j]].values[0]
-                eucl_dist= np.linalg.norm(row1-row2)
-                eucl_dist= eucl_dist/math.sqrt((word_lenth))
-                mat[i][j]=round(eucl_dist,2)
-        print(mat)
-
-"""
-
-def visualize(start,alph_size,data ):
-    plt.plot(x1)
-    plt.plot(range(start,start+alph_size),data)
-    plt.show()
-
-"""
-
-
-
 """-------------     Y-axis Distribution      ------------- """
-y_alphabets= np.linspace(0, 1, y_alphabet_size+1)[1:]
-y_alphabets = y_alphabets.tolist()
+def break_points_gaussian(size):
+    options = {
+        2: np.array([-np.inf,  0.00]),
+        3: np.array([-np.inf, -0.43, 0.43]),
+        4: np.array([-np.inf, -0.67, 0, 0.67]),
+        5: np.array([-np.inf, -0.84, -0.25, 0.25, 0.84]),
+        6: np.array([-np.inf, -0.97, -0.43, 0, 0.43, 0.97]),
+        7: np.array([-np.inf, -1.07, -0.57, -0.18, 0.18, 0.57, 1.07]),
+        8: np.array([-np.inf, -1.15, -0.67, -0.32, 0, 0.32, 0.67, 1.15]),
+        9: np.array([-np.inf, -1.22, -0.76, -0.43, -0.14, 0.14, 0.43, 0.76, 1.22]),
+        10: np.array([-np.inf, -1.28, -0.84, -0.52, -0.25, 0, 0.25, 0.52, 0.84, 1.28]),
+        11: np.array([-np.inf, -1.34, -0.91, -0.6, -0.35, -0.11, 0.11, 0.35, 0.6, 0.91, 1.34]),
+        12: np.array([-np.inf, -1.38, -0.97, -0.67, -0.43, -0.21, 0, 0.21, 0.43, 0.67, 0.97, 1.38]),
+        13: np.array([-np.inf, -1.43, -1.02, -0.74, -0.5, -0.29, -0.1, 0.1, 0.29, 0.5, 0.74, 1.02, 1.43]),
+        14: np.array([-np.inf, -1.47, -1.07, -0.79, -0.57, -0.37, -0.18, 0, 0.18, 0.37, 0.57, 0.79, 1.07, 1.47]),
+        15: np.array([-np.inf, -1.5, -1.11, -0.84, -0.62, -0.43, -0.25, -0.08, 0.08, 0.25, 0.43, 0.62, 0.84, 1.11, 1.5]),
+        16: np.array([-np.inf, -1.53, -1.15, -0.89, -0.67, -0.49, -0.32, -0.16, 0, 0.16, 0.32, 0.49, 0.67, 0.89, 1.15, 1.53]),
+        17: np.array([-np.inf, -1.56, -1.19, -0.93, -0.72, -0.54, -0.38, -0.22, -0.07, 0.07, 0.22, 0.38, 0.54, 0.72, 0.93, 1.19, 1.56]),
+        18: np.array([-np.inf, -1.59, -1.22, -0.97, -0.76, -0.59, -0.43, -0.28, -0.14, 0, 0.14, 0.28, 0.43, 0.59, 0.76, 0.97, 1.22, 1.59]),
+        19: np.array([-np.inf, -1.62, -1.25, -1, -0.8, -0.63, -0.48, -0.34, -0.2, -0.07, 0.07, 0.2, 0.34, 0.48, 0.63, 0.8, 1, 1.25, 1.62]),
+        20: np.array([-np.inf, -1.64, -1.28, -1.04, -0.84, -0.67, -0.52, -0.39, -0.25, -0.13, 0, 0.13, 0.25, 0.39, 0.52, 0.67, 0.84, 1.04, 1.28, 1.64]),
+    }
+
+    return options[size]
+
+
+def  break_points_quantiles(size):
+    options=np.linspace(0, 1, size+1)[1:]
+    return options
+
+
+y_alphabets = break_points_quantiles(y_alphabet_size).tolist()
+#y_alphabets = break_points(y_alphabet_size).tolist()
+
+
 
 
 
@@ -113,7 +117,6 @@ def index_to_letter(idx):
 x1 = (x1-min(x1))/(max(x1)-min(x1))
 plt.plot(x1)
 plt.show()
-
 
 
 
@@ -151,9 +154,6 @@ def alphabetize_ts(sub_section):
     return(curr_word)
 
 
-alphabetize= segment_ts(x1)
-len(alphabetize)
-
 """-------------     Complete Words      ------------- """    
 def complete_word(series=x1,word_len=word_lenth,skip_len=0):
     alphabetize= segment_ts(series)
@@ -166,8 +166,6 @@ def complete_word(series=x1,word_len=word_lenth,skip_len=0):
     
     return complete_word
 
-
-comp_word=complete_word()
 
 
 
@@ -187,43 +185,58 @@ simillar_word=simillar_words()
 
 
 
-def visualize(data,alph_size,lent ):
+def visualize(data,alph_size,lent,key):
     row=int(lent/4)
-    
-    print(row)
+    print(key)
     if(row > 1):
         fig = plt.figure(figsize=(4*row, 5*row))
         for i in range(0,lent):
-            ax = fig.add_subplot(row+1, 4,i+1 )
-            #plt.plot(x1)
+            fig.add_subplot(row+1, 4,i+1 )
             nData=data[i*alph_size:((i+1)*alph_size)]
             plt.plot(nData)
     else:
-        fig = plt.figure(figsize=(4*3, 5*3))
+        fig = plt.figure(figsize=(3*3, 4*3))
         for i in range(0,lent):
-            ax = fig.add_subplot(5, 2,i+1 )
+            fig.add_subplot(5, 2,i+1 )
             plt.plot(data)
     plt.show()   
      
 
 
-   
-    
+
+        
 """-------------     Euclidean Distance      ------------- """ 
-def  dist_matrix ():
+def dist_matrix(df,key):
+    df_temp = df.drop(columns=[ 'start'])
+    width= len(df_temp[0])
+    s = (width,width)
+    mat = np.zeros(s)
+    #strt=df.ix[1:2, 0:1]
+    if(width>=3):
+      for i in range(len(df)):
+            for j in range(len(df)):
+                row1= df_temp.iloc[[i]].values[0]
+                row2= df_temp.iloc[[j]].values[0]
+                eucl_dist= np.linalg.norm(row1-row2)
+                eucl_dist= eucl_dist/math.sqrt((word_lenth))
+                mat[i][j]=round(eucl_dist,2) 
+              
+      dist_array = np.triu(mat, 0)
+      print(key)
+      print(dist_array)
+
+
+
+def  distance_calculation ():
     i=0
-    per=int(len(x1)*25/100)
-    #print(per)
     simillar_word=simillar_words()
     sax_keys =list(simillar_word.keys())
     sax_values =list(simillar_word.values())
     alphabet_size=window_size+(skip_offset*(word_lenth-1))
     for n_val in sax_values:
-        keyy=sax_keys[i]
-        #print(len(n_val ))
-        
+        key=sax_keys[i]
         x2= list();
-        sum_alpha_list=list()
+        #sum_alpha_list=list()
         for n1_val in n_val:
             #slice_range=slice(n1_val,n1_val+alphabet_size)
             #slice_data = x1[slice_range]
@@ -232,23 +245,21 @@ def  dist_matrix ():
             while (alpha_count < alphabet_size):
                 x2.append(x1[n1_val+alpha_count])
                 alpha_count=alpha_count+1
-        visualize(x2,alphabet_size,len(n_val ))
+        visualize(x2,alphabet_size,len(n_val ),key)
         
-        #print(x2)
         temp_list=split(x2,alphabet_size)
         temp_df = pd.DataFrame(temp_list)
-        distance_calculatation(temp_df,keyy) 
+        temp_df.insert(loc=0, column='start', value=n_val)
+        dist_matrix(temp_df,key) 
+        temp_df.insert(loc=1, column='key', value=key)
     
-        for j in range(0,len(temp_list)):
-            sum_alphas=sum(temp_list[j])
-            sum_alpha_list.append(sum_alphas)
+        #for j in range(0,len(temp_list)):
+            #sum_alphas=sum(temp_list[j])
+            #sum_alpha_list.append(sum_alphas)
             
+        #temp_df.insert(loc=2, column='sum', value=sum_alpha_list)
         
-        temp_df.insert(loc=0, column='key', value=keyy)
-        temp_df.insert(loc=1, column='start', value=n_val)
-        temp_df.insert(loc=2, column='sum', value=sum_alpha_list)
-    
-    
+        
         if(i==0):   
             df_sax =temp_df.copy()
         else:
@@ -260,9 +271,7 @@ def  dist_matrix ():
 
 
 
-
-
-sax=dist_matrix()
+sax=distance_calculation()
 
 
 
