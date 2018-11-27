@@ -10,7 +10,6 @@ import math
 import os
 import matplotlib.pyplot as plt
 from collections import defaultdict
-import matplotlib
 from sklearn.metrics.pairwise import euclidean_distances    
 
 
@@ -25,9 +24,9 @@ x1 = x1.astype(np.float)
 
 
 
-data2 =  pd.read_csv('ecg.csv', sep=',', header=None)
+data =  pd.read_csv('car_sales.csv', sep=',', header=None)
 
-x1 = data2.iloc[1:,1].values.flatten() 
+x1 = data.iloc[1:,1].values.flatten() 
 x1=np.asfarray(x1,float)
 
 
@@ -36,7 +35,7 @@ x1=np.asfarray(x1,float)
 """-------------     Intialization     ------------- """
 y_alphabet_size=4
 word_lenth=3
-window_size=8
+window_size=5
 skip_offset=5
 
 
@@ -85,7 +84,7 @@ def  break_points_quantiles(size):
 
 
 y_alphabets = break_points_quantiles(y_alphabet_size).tolist()
-#y_alphabets = break_points(y_alphabet_size).tolist()
+#y_alphabets = break_points_gaussian(y_alphabet_size).tolist()
 
 
 
@@ -97,7 +96,6 @@ def x_distrubted_values(series):
     mean=np.mean(series)
     #median=sorted(series)[len(series) // 2]
     return mean
-
 
 
 
@@ -179,30 +177,33 @@ def simillar_words():
         
     return sax  
 
-
-
 simillar_word=simillar_words()
 
 
 
+"""-------------     Visualization      ------------- """  
 def visualize(data,alph_size,lent,key):
     row=int(lent/4)
     print(key)
-    if(row > 1):
+    #print(len(data))
+    #print(alph_size)
+    if(lent > 4):
         fig = plt.figure(figsize=(4*row, 5*row))
         for i in range(0,lent):
+            slice_range=slice(i*alph_size,(i+1)*alph_size)
+            nData=data[slice_range]
             fig.add_subplot(row+1, 4,i+1 )
-            nData=data[i*alph_size:((i+1)*alph_size)]
             plt.plot(nData)
     else:
         fig = plt.figure(figsize=(3*3, 4*3))
         for i in range(0,lent):
+            print()
+            slice_range=slice(i*alph_size,(i+1)*alph_size)
+            nData=data[slice_range]
             fig.add_subplot(5, 2,i+1 )
-            plt.plot(data)
+            plt.plot(nData)
     plt.show()   
      
-
-
 
         
 """-------------     Euclidean Distance      ------------- """ 
@@ -238,9 +239,7 @@ def  distance_calculation ():
         x2= list();
         #sum_alpha_list=list()
         for n1_val in n_val:
-            #slice_range=slice(n1_val,n1_val+alphabet_size)
-            #slice_data = x1[slice_range]
-            #visualize(n1_val,alphabet_size,slice_data)
+            
             alpha_count=0
             while (alpha_count < alphabet_size):
                 x2.append(x1[n1_val+alpha_count])
@@ -252,12 +251,6 @@ def  distance_calculation ():
         temp_df.insert(loc=0, column='start', value=n_val)
         dist_matrix(temp_df,key) 
         temp_df.insert(loc=1, column='key', value=key)
-    
-        #for j in range(0,len(temp_list)):
-            #sum_alphas=sum(temp_list[j])
-            #sum_alpha_list.append(sum_alphas)
-            
-        #temp_df.insert(loc=2, column='sum', value=sum_alpha_list)
         
         
         if(i==0):   
