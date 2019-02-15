@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+"""
+Created on Fri Feb 15 19:01:39 2019
+
+@author: Meagatron
+"""
+
+# -*- coding: utf-8 -*-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt,mpld3
@@ -208,6 +215,17 @@ def complete_word(series=x1,word_len=word_lenth,skip_len=skip_offset):
     complete_word=list()
     complete_indices=indices
     
+    """
+    for i in range(0, len(alphabetize)):
+    	complete_word.append(alphabetize[i:i + word_len])
+    n=0
+    for i in complete_word:
+        if(len(i) != word_len):
+            complete_word.remove(i)
+        n=n+1
+         
+                 
+    """
     """  Simillar Words  """
     complete_word=alphabetize
     sax = defaultdict(list)
@@ -215,6 +233,9 @@ def complete_word(series=x1,word_len=word_lenth,skip_len=skip_offset):
         if(len(complete_word[i])==word_lenth):
             sax[complete_word[i]].append(complete_indices[i])
     return sax
+
+
+
 
 simillar_word=complete_word()
 
@@ -232,7 +253,7 @@ def Compare_Shape():
         temp_list.append(simillar_word.get(key_i))
         for key_j in simillar_word:
             dist=hamming_distance(key_i, key_j)
-            if(dist==ham_distance and key_i !=key_j):
+            if(dist==ham_distance and key_i !=key_j): #
                 map_keys[key_i].append(key_j)
                 temp_list.append(simillar_word.get(key_j))
         tempp=list()
@@ -300,6 +321,10 @@ def  prep_visualize1 ():
                 x2.append(x1[n_val+alpha_count])
                 alpha_count=alpha_count+1
         visualize(x2,window_size,len(sax_values[i][0]),key)
+    
+    
+
+
 
 
 """-------------     Matrix      ------------- """  
@@ -350,7 +375,6 @@ def  matrix_prep ():
         temp_df['indexx']=index_list
         temp_df['position']=position_list
         temp_df['simillar_key']=simillar_key_list            
-        
         matrix_calculation(temp_df,key)            
                     
                     
