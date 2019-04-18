@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+"""
+Created on Wed Apr 17 18:51:11 2019
+
+@author: Meagatron
+"""
+
+# -*- coding: utf-8 -*-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt,mpld3
@@ -11,30 +18,22 @@ import itertools
 
 
 """-------------     Intialization     ------------- """
-start=20
-end=42
+start=12
+end=35
 window_size=end-start
 skip_offset=int(window_size/2)
-
-
-
-
-
-y_alphabet_size=4
+y_alphabet_size=5
 word_lenth=3
-#window_size=10
-#skip_offset=5
 ham_distance=0
 epsilon = 1e-6
 
 
+"""-------------     import Data     -------------"""
 
 
 data =  pd.read_csv('car_sales.csv', sep=',', header=None)
 x1 = data.iloc[1:,1].values.flatten() 
 x1=np.asfarray(x1,float)
-
-
 #os.remove("./Output/sliding_half_segment/")
 
 """-------------     Helper Functions     ------------- """
@@ -136,63 +135,46 @@ def normal_distribution(x):
 
 """-------------    1- Normalize Data      ------------- """    
 x1=normalize(x1)
+
 plt.plot(x1)
 plt.show()
 
-xx2=x1[start:end]
-print(xx2)
-xx2=normalize(xx2)
-
 """-------------   5.2-  Y_Alphabetize      ------------- """    
 def alphabetize_ts(sub_section):
-    mean_val=x_distrubted_values(sub_section)
+
+    mean_val=np.mean(sub_section)
+    print(mean_val)
     y_alpha_val=min(y_alphabets, key=lambda x:abs(x-mean_val))
+    #print("y_alpha_val",y_alpha_val)
     y_alpha_idx=y_alphabets.index(y_alpha_val)
     curr_word = index_to_letter(y_alpha_idx)
+    #print(curr_word)
     return(curr_word)
 
 
 
-
 """-------------    2- Segmentization  Data      ------------- """    
-def selected_segment_ts():
-    sub_section=xx2
-    num=0
-    alpha=""
+def segment_ts():
+    curr_count=0
     words=list()
     indices=list()
-    curr_word=""
-    chunk_size=int(len(sub_section)/word_lenth)
-    for j in range(0,word_lenth):
-            chunk = sub_section[num:num + chunk_size]
-            curr_word=alphabetize_ts(chunk)
-            alpha+=str(curr_word)
-            num+=chunk_size
-    words.append(alpha)
-    indices.append(start)
-       
-    return (words,indices)
 
-segment=selected_segment_ts()
+    complete_indices=list()
+    for k in range(len(x1-window_size)):
+        
+        sub_section=x1[k : (k+window_size)]
+        #sub_section=normalize(sub_section)
+        #print(curr_count,(curr_count+window_size))
+        #print(sub_section)
+        
+        curr_word=alphabetize_ts(sub_section)
+        words.append(curr_word)
+        k=k+skip_offset-1
+        
+        
+        
+        
 
-"""  Complete Words  """
-def selected_complete_word(series=xx2):
-    alphabetize,indices=selected_segment_ts()
-    complete_word=list()
-    complete_indices=indices
-    
-    """  Simillar Words  """
-    complete_word=alphabetize
-    sax = defaultdict(list)
-    for i in range(0,len(complete_word)):
-        if(len(complete_word[i])==word_lenth):
-            sax[complete_word[i]].append(complete_indices[i])
-    return sax
+    return (words)
 
-simillar_word=selected_complete_word()
-
-
-
-
-
-
+ddd=segment_ts()

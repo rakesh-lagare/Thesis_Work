@@ -1,0 +1,55 @@
+{% load static%}
+
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Time series  </title>
+		<meta name="description" content="Reading csv file using javascript" />
+
+		<!-- bootstrap css -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="{%static './css/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{%static './css/styles.css' %} " />
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+
+    <style>
+
+     .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 1.5px;
+        }
+    .zoom {
+      cursor: move;
+      fill: none;
+      pointer-events: all;
+    }
+
+    </style>
+    </head>
+
+    <body>
+
+
+        <div class="container">
+
+			<div class="header">
+				<h1>User based Time series Motif Discovery</h1>
+			</div>
+
+      {% block content%}
+
+      {%endblock%}
+
+
+			</div>
+
+
+    </body>
+</html>

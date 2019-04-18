@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt,mpld3
+import matplotlib.pyplot as plt#,mpld3
 from collections import defaultdict
-from sklearn.metrics.pairwise import euclidean_distances    
-from flask import Flask, render_template, request
 import math
 import itertools
+#from pages.views import return_data
+from django.conf import settings
+from django.shortcuts import render, redirect
 
 
 
@@ -18,20 +19,31 @@ skip_offset=5
 ham_distance=1
 epsilon = 1e-6
 
+start=11
+end=11
+seg_data=[11]
+
+
+
+
+def test1(x_data,start_seg,end_seg):
+    global seg_data,start,end
+    seg_data=x_data
+    start=start_seg
+    end=end_seg
+
+
+
 
 """-------------     import Data     -------------"""
-"""
-file_name='test_data2.csv'
-data2 =  pd.read_csv(file_name, sep=',', header=None)
 
-x1 = data2.iloc[1:,1].values.flatten() 
-x1 = x1.astype(np.float)
-"""
 
-data =  pd.read_csv('car_sales.csv', sep=',', header=None)
-x1 = data.iloc[1:,1].values.flatten() 
-x1=np.asfarray(x1,float)
-#os.remove("./Output/sliding_half_segment/")
+#data =  pd.read_csv('files/data.csv', sep=',', header=None)
+#x1 = data.iloc[1:,1].values.flatten()
+#x1=np.asfarray(x1,float)
+
+x1=seg_data
+
 
 """-------------     Helper Functions     ------------- """
 
@@ -80,7 +92,7 @@ def  break_points_quantiles(size):
 y_alphabets = break_points_gaussian(y_alphabet_size).tolist()
 
 
-def hamming_distance1(string1, string2): 
+def hamming_distance1(string1, string2):
     distance = 0
     L = len(string1)
     for i in range(L):
@@ -104,7 +116,7 @@ def x_distrubted_values(series):
 
 
 
-"""-------------     Index to Letter conversion      ------------- """    
+"""-------------     Index to Letter conversion      ------------- """
 
 def index_to_letter(idx):
     """Convert a numerical index to a char."""
@@ -130,12 +142,12 @@ def normal_distribution(x):
     x = (x-min(x))/(max(x)-min(x))
     return x
 
-"""-------------    1- Normalize Data      ------------- """    
+"""-------------    1- Normalize Data      ------------- """
 x1=normalize(x1)
 plt.plot(x1)
 plt.show()
 
-"""-------------   5.2-  Y_Alphabetize      ------------- """    
+"""-------------   5.2-  Y_Alphabetize      ------------- """
 def alphabetize_ts(sub_section):
     mean_val=x_distrubted_values(sub_section)
     y_alpha_val=min(y_alphabets, key=lambda x:abs(x-mean_val))
@@ -146,7 +158,7 @@ def alphabetize_ts(sub_section):
 
 
 
-"""-------------    2- Segmentization  Data      ------------- """    
+"""-------------    2- Segmentization  Data      ------------- """
 def segment_ts(series,windowSize=window_size,skip_offset=skip_offset):
     ts_len=len(x1)
     mod = ts_len%windowSize
@@ -157,20 +169,16 @@ def segment_ts(series,windowSize=window_size,skip_offset=skip_offset):
     else:
      ts_len=int(math.ceil((ts_len-mod-window_size)/skip_offset))
      rnge=int(ts_len)
-     
-     
     curr_count=0
     words=list()
     indices=list()
     complete_indices=list()
-    
-    
     for i in range(0, rnge):
         sub_section = series[curr_count:(curr_count+windowSize)]
         sub_section=normalize(sub_section)
         #print(curr_count,(curr_count+windowSize))
         #print(sub_section)
-        curr_word=""
+        curr_word=alphabetize_ts(sub_section)
         chunk_size=int(len(sub_section)/word_lenth)
         num=0
         zlp=""
@@ -183,7 +191,7 @@ def segment_ts(series,windowSize=window_size,skip_offset=skip_offset):
         words.append(zlp)
         indices.append(curr_count)
         curr_count=curr_count+skip_offset-1
-        
+
         temp_list=[]
         temp_list.append(sub_section)
         temp_df = pd.DataFrame(temp_list)
@@ -192,8 +200,8 @@ def segment_ts(series,windowSize=window_size,skip_offset=skip_offset):
         temp_df.insert(loc=2, column='scale_high', value=np.max(sub_section))
         temp_df.insert(loc=3, column='scale_low', value=np.min(sub_section))
 
-        if(i==0):   
-           
+        if(i==0):
+
             df_sax =temp_df.copy()
         else:
             df_sax=df_sax.append(temp_df, ignore_index=True)
@@ -203,7 +211,7 @@ def segment_ts(series,windowSize=window_size,skip_offset=skip_offset):
 
 
 
-"""-------------    SAX      ------------- """    
+"""-------------    SAX      ------------- """
 
 
 """  Complete Words  """
@@ -211,7 +219,7 @@ def complete_word(series=x1,word_len=word_lenth,skip_len=skip_offset):
     alphabetize,indices,df_sax=segment_ts(series)
     complete_word=list()
     complete_indices=indices
-    
+
     """  Simillar Words  """
     complete_word=alphabetize
     sax = defaultdict(list)
@@ -220,11 +228,11 @@ def complete_word(series=x1,word_len=word_lenth,skip_len=skip_offset):
             sax[complete_word[i]].append(complete_indices[i])
     return sax
 
-simillar_word=complete_word()
+#simillar_word=complete_word()
 
 
 
-"""-------------    Compare Shape Algorithm      ------------- """    
+"""-------------    Compare Shape Algorithm      ------------- """
 
 
 def Compare_Shape():
@@ -241,13 +249,13 @@ def Compare_Shape():
                 temp_list.append(simillar_word.get(key_j))
         tempp=list()
         tempp = list(itertools.chain(*temp_list))
-        map_indices[key_i].append(tempp)        
-    return (map_keys,map_indices)        
+        map_indices[key_i].append(tempp)
+    return (map_keys,map_indices)
 
 
-comapre=Compare_Shape()
+#comapre=Compare_Shape()
 
-"""-------------     Visualization      ------------- """  
+"""-------------     Visualization      ------------- """
 
 def visualize(data,alph_size,lent,key):
     row=int(lent/4)
@@ -268,16 +276,16 @@ def visualize(data,alph_size,lent,key):
             fig.add_subplot(5, 2,i+1 )
             plt.plot(nData)
     #plt.savefig('./Output/sliding_half_segment/'+key+'.png')
-    #plt.savefig('books_read.png')        
+    #plt.savefig('books_read.png')
     plt.show()
-    
+
 
 def  prep_visualize ():
     i=0
     simillar_word=complete_word()
     sax_keys =list(simillar_word.keys())
     sax_values =list(simillar_word.values())
-    
+
 
     for n_val in sax_values:
         key=sax_keys[i]
@@ -287,7 +295,7 @@ def  prep_visualize ():
             while (alpha_count < window_size):
                 x2.append(x1[n1_val+alpha_count])
                 alpha_count=alpha_count+1
-            
+
         visualize(x2,window_size,len(n_val ),key)
         i=i+1
 
@@ -306,7 +314,7 @@ def  prep_visualize1 ():
         visualize(x2,window_size,len(sax_values[i][0]),key)
 
 
-"""-------------     Matrix      ------------- """  
+"""-------------     Matrix      ------------- """
 
 
 def  matrix_calculation (df,key):
@@ -314,16 +322,16 @@ def  matrix_calculation (df,key):
     width=len(df)
     s = (width,width)
     mat = np.zeros(s)
-    
+
     if(width>=3):
         for i in range(len(df)):
             for j in range(len(df)):
                 row1= df_temp.iloc[[i]].values[0]
                 row2= df_temp.iloc[[j]].values[0]
                 dist= row1-row2
-                mat[i][j]=(dist) 
+                mat[i][j]=(dist)
 
-          
+
         dist_array = np.triu(mat, 0)
         print(key)
         print(dist_array)
@@ -334,9 +342,9 @@ def  matrix_prep ():
     compare_keys,compare_indices = Compare_Shape()
     sax_keys =list(compare_keys.keys())
     sax_values =list(compare_keys.values())
-    
+
     i=0
-    
+
     for n_val in sax_values:
         key=sax_keys[i]
         temp_df = pd.DataFrame()
@@ -351,23 +359,21 @@ def  matrix_prep ():
                     position_list.append(row['position'])
                     simillar_key_list.append(n1_val)
 
-                    
+
         temp_df['indexx']=index_list
         temp_df['position']=position_list
-        temp_df['simillar_key']=simillar_key_list            
-        
-        #matrix_calculation(temp_df,key)            
-                    
-                    
+        temp_df['simillar_key']=simillar_key_list
+
+        #matrix_calculation(temp_df,key)
+
+
         i=i+1
 
 print("===========================Before Compare Shape============================")
-prep_visualize()
+#prep_visualize()
 
 print("===========================After Compare Shape============================")
-prep_visualize1 ()
+#prep_visualize1 ()
 
 print("===========================Position Matrix ============================")
-matrix_prep()
-
-
+#matrix_prep()

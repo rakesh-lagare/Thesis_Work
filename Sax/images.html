@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time series  </title>
+    <meta name="description" content="Reading csv file using javascript" />
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    </head>
+
+
+    <body>
+<script type="text/javascript">
+  
+  var folder = "../ops/";
+
+
+
+
+$.ajax({
+    url : folder,
+    success: function (data) {
+        $(data).find("a").attr("href", function (i, val) {
+            if( val.match(/\.(jpe?g|png|gif)$/) ) { 
+                $("body").append( "<img src='"+ folder + val +"'>" );
+            } 
+        });
+    }
+});
+
+
+</script>
+
+<button  id="clickk" class="btn btn-primary" > Submit</button>
+    </body>
+
+   </html> 

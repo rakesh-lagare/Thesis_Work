@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+{% for image in images %}
+<img src='/static/ops/{{image}}' />
+{% endfor %}
+
+{% endblock %}
