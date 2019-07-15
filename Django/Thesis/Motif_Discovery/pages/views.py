@@ -51,6 +51,9 @@ def images_display(request):
     path="C:/Megatron/Thesis/Thesis_Work/Django/Thesis/Motif_Discovery/static/ops"
     img_list =os.listdir(path)
 
+    #os.remove("static/ops/.png")
+    #print("File Removed!")
+
     return render(request, 'images.html', {'images': img_list})
 
 

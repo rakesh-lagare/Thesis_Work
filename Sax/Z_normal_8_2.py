@@ -201,7 +201,7 @@ def segment_ts(series,windowSize=window_size,skip_offset=skip_offset):
     return (words,indices,df_sax)
 
 
-
+alphabetize11,indices,df_sax=segment_ts(x1)
 
 """-------------    SAX      ------------- """    
 
@@ -221,6 +221,8 @@ def complete_word(series=x1,word_len=word_lenth,skip_len=skip_offset):
     return sax
 
 simillar_word=complete_word()
+
+
 
 
 
@@ -329,6 +331,8 @@ def  matrix_calculation (df,key):
         print(dist_array)
 
 
+alphabetize,indices,feat_vector=segment_ts(x1)
+
 def  matrix_prep ():
     alphabetize,indices,feat_vector=segment_ts(x1)
     compare_keys,compare_indices = Compare_Shape()
@@ -338,12 +342,14 @@ def  matrix_prep ():
     i=0
     
     for n_val in sax_values:
+       
         key=sax_keys[i]
         temp_df = pd.DataFrame()
         index_list=list()
         position_list=list()
         simillar_key_list=list()
         for n1_val in n_val:
+            print(n1_val)
             for index, row in feat_vector.iterrows():
                 if(row['keys']==n1_val):
                     # print(row['position'],index)
@@ -356,10 +362,12 @@ def  matrix_prep ():
         temp_df['position']=position_list
         temp_df['simillar_key']=simillar_key_list            
         
-        #matrix_calculation(temp_df,key)            
+        matrix_calculation(temp_df,key)            
                     
                     
         i=i+1
+         
+
 
 print("===========================Before Compare Shape============================")
 prep_visualize()

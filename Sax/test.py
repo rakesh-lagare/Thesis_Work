@@ -18,13 +18,13 @@ import itertools
 
 
 """-------------     Intialization     ------------- """
-start=9
-end=19
+start=10
+end=18
 window_size=end-start
 skip_offset=2#int(window_size/2)
 y_alphabet_size=4
 word_lenth=3
-ham_distance=0
+ham_distance=1
 epsilon = 1e-6
 
 
@@ -188,7 +188,7 @@ def segment_ts():
            
         words.append(curr_word)
         indices.append(curr_count)
-        curr_count=curr_count+skip_offset
+        
         
         temp_list=[]
         temp_list.append(sub_section)
@@ -197,6 +197,9 @@ def segment_ts():
         temp_df.insert(loc=1, column='position', value=sorted(sub_section)[len(sub_section) // 2])
         temp_df.insert(loc=2, column='scale_high', value=np.max(sub_section))
         temp_df.insert(loc=3, column='scale_low', value=np.min(sub_section))
+        temp_df.insert(loc=4, column='idx', value=curr_count)
+        
+        curr_count=curr_count+skip_offset
 
         if(i==0):   
            
@@ -210,7 +213,7 @@ def segment_ts():
 
 
 """-------------    SAX      ------------- """    
-
+alphabetize,indices,df_sax=segment_ts()
 
 """  Complete Words  """
 def complete_word(series=x1,word_len=word_lenth,skip_len=skip_offset):
@@ -229,6 +232,49 @@ def complete_word(series=x1,word_len=word_lenth,skip_len=skip_offset):
 simillar_word=complete_word()
 
 
+
+#"""               CHANGE                        """
+
+def Compare_Shape_Segments():
+    simillar_word=complete_word()
+    map_keys = defaultdict(list)
+    map_indices=defaultdict(list)
+    for key_i in simillar_word:
+        temp_list=list()
+        temp_list.append(simillar_word.get(key_i))
+        for key_j in simillar_word:
+            dist=hamming_distance(key_i, key_j)
+            #print(dist)
+            if(dist==ham_distance and key_i !=key_j):
+                map_keys[key_i].append(key_j)
+                #print(key_i)
+                temp_list.append(simillar_word.get(key_j))
+        tempp=list()
+        tempp = list(itertools.chain(*temp_list))
+        map_indices[key_i].append(tempp)
+    print(map_keys.keys())
+    print(map_keys.values())
+    sax_keys =list(map_indices.keys())
+    sax_values =list(map_indices.values())
+    sax = defaultdict(list)
+    for i in range(len(sax_values)):
+        key=sax_keys[i]
+        x2= list();
+        for n_val in sax_values[i][0]:
+            x2.append(n_val)
+        sax[key] = x2
+    
+    
+    #for key in map_keys.keys():
+    
+    
+    
+    
+    
+    
+    
+    
+    return sax  
 
 
 
@@ -261,7 +307,7 @@ def selected_segment_ts():
        
     return (words,indices)
 
-selected_segmentTS=selected_segment_ts()
+
 
 """  Complete Words  """
 def selected_complete_word():
@@ -277,14 +323,12 @@ def selected_complete_word():
             sax[complete_word[i]].append(complete_indices[i])
     return sax
 
-selected_simillar_word=selected_complete_word()
-
 
 
 
 
 def Compare_Selected_Segments():
-    simillar_word=complete_word()
+    simillar_word=Compare_Shape_Segments()   # CHANGE 
     selected_simillar_word=selected_complete_word()
     
     simillar_segs = {key:simillar_word[key] for key in selected_simillar_word if key in simillar_word}
@@ -294,15 +338,13 @@ def Compare_Selected_Segments():
 
 
 
-
-
-
 def visualize(data,alph_size,lent,key):
 
     print(key)
     
     for i in range(0,lent):
         slice_range=slice(i*alph_size,(i+1)*alph_size)
+        print(data)
         nData=data[slice_range]
         plt.plot(nData)
         pic_tag=str(i)
@@ -317,18 +359,26 @@ def  prep_visualize ():
     sax_keys =list(simillar_word.keys())
     sax_values =list(simillar_word.values())
     
-
+    
     for n_val in sax_values:
+        #print(n_val)
         key=sax_keys[i]
-        x2= list();
+        
         for n1_val in n_val:
+            x2= list();
             alpha_count=0
+            print(n1_val)
             while (alpha_count < window_size):
                 x2.append(x1[n1_val+alpha_count])
                 alpha_count=alpha_count+1
+                
             
-        visualize(x2,window_size,len(n_val ),key)
+            plt.plot(x2)
+            #plt.xlim([5, 18])
+            #plt.xticks(n1_val, n1_val+alpha_count )
+            plt.show()
         i=i+1
 
-
 prep_visualize ()
+    
+
