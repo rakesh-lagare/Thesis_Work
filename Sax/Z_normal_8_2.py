@@ -370,10 +370,10 @@ def  matrix_prep ():
 
 
 print("===========================Before Compare Shape============================")
-prep_visualize()
+#prep_visualize()
 
 print("===========================After Compare Shape============================")
-prep_visualize1 ()
+#prep_visualize1 ()
 
 print("===========================Position Matrix ============================")
 matrix_prep()
