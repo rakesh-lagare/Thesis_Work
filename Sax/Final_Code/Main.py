@@ -146,6 +146,7 @@ def  dtw_test2 ():
     alphabetize,indices,df_dtw_prep=segment_ts()
     compare_strings,compare_list=Compare_Shape()
     dtw_df=pd.DataFrame()
+    dtw_rank_df=pd.DataFrame()
     
     
     for k, v in compare_list.items():
@@ -182,15 +183,13 @@ def  dtw_test2 ():
                     #temp_df = pd.DataFrame([[k,index1,index2,sub_section1,sub_section2,dtw_value]], columns=['keyy','index1','index2','sub_section1','sub_section2','dtw_value'])
                      
                      
-                     
-                     
                     """-----------------Fast DTW--------------------"""
                     x = np.array(sub_section1)
                     y = np.array(sub_section2)
                     dtw_value, path = fastdtw(x, y, dist=euclidean)
                     
-                    #temp_df = pd.DataFrame([[k,index1,index2,sub_section1,sub_section2,dtw_value]], columns=['keyy','index1','index2','sub_section1','sub_section2','dtw_value'])
-                    temp_df = pd.DataFrame([[k,index1,index2,dtw_value]], columns=['keyy','index1','index2','dtw_value'])
+                   #temp_df = pd.DataFrame([[k,index1,index2,sub_section1,sub_section2,dtw_value]], columns=['key','index1','index2','sub_section1','sub_section2','dtw_value'])
+                    temp_df = pd.DataFrame([[k,index1,index2,sub_section1,sub_section2,dtw_value]], columns=['key','index1','index2','sub_section1','sub_section2','dtw_value'])
                     dtw_temp=dtw_temp.append(temp_df,ignore_index=True)
                     
                     
@@ -198,26 +197,26 @@ def  dtw_test2 ():
                     """---------------------------------------------"""
                      
                      
-                    dtw_df=dtw_df.append(temp_df,ignore_index=True)
-        #print(dtw_temp)
+                    #dtw_df=dtw_df.append(temp_df,ignore_index=True)
+
         med=(dtw_temp['dtw_value'] ).tolist()
-        #print(len(dtw_temp))
-        print(median(med))
+
         if(len(dtw_temp)> 5) :
             dtw_temp = dtw_temp[dtw_temp['dtw_value'] < median(med)]
-        print(dtw_temp)
-        #print("--------------------------------------------")            
-    
+        dtw_temp= dtw_temp.sort_values(by=['dtw_value'])
+        rank_list=[]
+        for m in range(1, len(dtw_temp)+1):
+            rank_list.append(m)
+            
+        dtw_temp.insert(loc=6, column='ranks', value=rank_list)
+        dtw_rank_df= dtw_rank_df.append(dtw_temp,ignore_index=True)
+        
 
-        
-        
-        
-        
-        
-    return(dtw_df)
+    return(dtw_rank_df)
 
 
 dt_test=dtw_test2 ()
+
 
 
 
