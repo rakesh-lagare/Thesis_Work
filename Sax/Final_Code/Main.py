@@ -1,16 +1,19 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+
 from collections import defaultdict
 import math
 import itertools
-from dtw import dtw
 import timeit
 from scipy.spatial.distance import euclidean
 from fastdtw import fastdtw
+from dtw import dtw
 from statistics import median
+import matplotlib.pyplot as plt
 
-from helper_functions import normalize,alphabetize_ts,hamming_distance
+
+from helper_functions import normalize,alphabetize_ts,hamming_distance,dtw_rank_gen,dtw_val_gen
+#from visualization import dtw_visualization,dtw_visualization2
 
 
 
@@ -25,11 +28,12 @@ x1=np.asfarray(x1,float)
 
 
 
+
 y_alphabet_size=4
 word_lenth=3
-window_size=round( len(x1) *10 /100  )
-skip_offset=round(window_size/2)
-ham_distance=1
+window_size=round( len(x1) *0.1 )
+skip_offset=round(window_size*0.5)
+ham_distance=2
 epsilon = 1e-6
 
 
@@ -55,7 +59,8 @@ def segment_ts():
     for i in range(0, rnge):
 
         sub_section = x1[curr_count:(curr_count+window_size)]
-        sub_section=normalize(sub_section)
+        sub_section = normalize(sub_section)
+        #print(curr_count,(curr_count+window_size))
         
         curr_word=""
         chunk_size=int(len(sub_section)/word_lenth)
@@ -85,7 +90,7 @@ def segment_ts():
         temp_df.insert(loc=0, column='indices', value=curr_count)
         
         
-        curr_count=curr_count+skip_offset-1
+        curr_count=curr_count+skip_offset
 
         if(i==0):
 
@@ -140,82 +145,100 @@ def Compare_Shape():
         map_indices[key_i].append(tempp)        
     return (map_keys,map_indices)
 
+cp1,cp2= Compare_Shape()
 
 
-def  dtw_test2 ():
+
+def dtw_visualization(dtw_df,skip_offset,x1):
+
+    idx1 = dtw_df['index1'].tolist()
+    idx2 = dtw_df['index2'].tolist()
+    
+    idx= idx1 + idx2
+    unique_list = list(set(idx))
+    print(unique_list)
+    
+    plt.figure(figsize=(16,10), dpi= 60)
+    plt.plot(x1)
+
+    for i in unique_list:
+        start_idx = i
+        end_idx= i + skip_offset
+        plt.axvspan(start_idx, end_idx, color='red', alpha=0.4)
+        
+    plt.show()
+        
+
+
+
+
+def dtw_visualization2(dtw_df):
+    alphabetize,indices,df_sax=segment_ts()
+    idx1 = dtw_df['index1'].tolist()
+    idx2 = dtw_df['index2'].tolist()
+    idx= idx1 + idx2
+    unique_list = list(set(idx))
+    lent= len(unique_list)
+    row=int(lent/4)
+    
+    print(unique_list)
+    
+    if(lent > 4):
+        fig = plt.figure(figsize=(4*row, 5*row))
+        for i in range(0,lent):
+            row1 = df_sax.loc[df_sax['indices'] == unique_list[i]]
+            sub_section = row1.iloc[0]['sub_section']
+            fig.add_subplot(row+1, 4,i+1 )
+            plt.plot(sub_section)
+    else:
+        fig = plt.figure(figsize=(3*3, 4*3))
+        for i in range(0,lent):
+            row1 = df_sax.loc[df_sax['indices'] == unique_list[i]]
+            sub_section = row1.iloc[0]['sub_section']
+            fig.add_subplot(5, 2,i+1 )
+            plt.plot(sub_section)
+    #plt.savefig('./Output/sliding_half_segment/'+key+'.png')
+    #plt.savefig('books_read.png')        
+    plt.show()
+
+def  dtw_rank_table ():
     alphabetize,indices,df_dtw_prep=segment_ts()
     compare_strings,compare_list=Compare_Shape()
-    dtw_df=pd.DataFrame()
     dtw_rank_df=pd.DataFrame()
     
-    
     for k, v in compare_list.items():
-        
+
         v_temp=str(v)[2:-2]
-        v1=[int(s) for s in v_temp.split(',')]
+        v1=[int(s) for s in v_temp.split(',')] # bug if v1 is less than 2 , cant calculate dtw_value
         dtw_temp=pd.DataFrame()
+        print(k)
         for i in range(0,len(v1)-1):
             for j in range(i,len(v1)):
-                
-                
-                if(v1[i] != v1[j]):
-                    
-                    
 
+                if(v1[i] != v1[j]):
                     row1 = df_dtw_prep.loc[df_dtw_prep['indices'] == v1[i]]
                     row2 = df_dtw_prep.loc[df_dtw_prep['indices'] == v1[j]]
                     
                     sub_section1 = row1.iloc[0]['sub_section']
                     sub_section2 = row2.iloc[0]['sub_section']
-                    
-                    
+
                     index1 = row1.iloc[0]['indices']
                     index2 = row2.iloc[0]['indices']
                     
-                    """------------------Normal DTW-------------------------"""
-                    #x=np.array(sub_section1).reshape(-1, 1)
-                    #y=np.array(sub_section2).reshape(-1, 1)
-
-                    #euclidean_norm = lambda x, y: np.abs(x - y)
-                    #dtw_value, cost_matrix, acc_cost_matrix, path = dtw(x, y, dist=euclidean_norm)
-                    
-                    
-                    #temp_df = pd.DataFrame([[k,index1,index2,sub_section1,sub_section2,dtw_value]], columns=['keyy','index1','index2','sub_section1','sub_section2','dtw_value'])
-                     
-                     
-                    """-----------------Fast DTW--------------------"""
-                    x = np.array(sub_section1)
-                    y = np.array(sub_section2)
-                    dtw_value, path = fastdtw(x, y, dist=euclidean)
-                    
-                   #temp_df = pd.DataFrame([[k,index1,index2,sub_section1,sub_section2,dtw_value]], columns=['key','index1','index2','sub_section1','sub_section2','dtw_value'])
+                    dtw_value= dtw_val_gen(sub_section1, sub_section2)
                     temp_df = pd.DataFrame([[k,index1,index2,sub_section1,sub_section2,dtw_value]], columns=['key','index1','index2','sub_section1','sub_section2','dtw_value'])
                     dtw_temp=dtw_temp.append(temp_df,ignore_index=True)
-                    
-                    
-                    
-                    """---------------------------------------------"""
-                     
-                     
-                    #dtw_df=dtw_df.append(temp_df,ignore_index=True)
 
-        med=(dtw_temp['dtw_value'] ).tolist()
-
-        if(len(dtw_temp)> 5) :
-            dtw_temp = dtw_temp[dtw_temp['dtw_value'] < median(med)]
-        dtw_temp= dtw_temp.sort_values(by=['dtw_value'])
-        rank_list=[]
-        for m in range(1, len(dtw_temp)+1):
-            rank_list.append(m)
-            
-        dtw_temp.insert(loc=6, column='ranks', value=rank_list)
+        dtw_temp = dtw_rank_gen(dtw_temp)
         dtw_rank_df= dtw_rank_df.append(dtw_temp,ignore_index=True)
-        
+        dtw_visualization(dtw_temp,skip_offset,x1)
+
+
 
     return(dtw_rank_df)
 
 
-dt_test=dtw_test2 ()
+rank_table=dtw_rank_table()
 
 
 
