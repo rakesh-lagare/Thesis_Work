@@ -14,15 +14,13 @@ from fastdtw import fastdtw
 
 import matplotlib.pyplot as plt
 
-plt.plot(range(20))
-plt.axvspan(0, 20, color='red', alpha=0.3)
-
-plt.axvspan(2, 4, color='red', alpha=0.5)
-plt.axvspan(5, 9, color='red', alpha=0.5)
-plt.axvspan(5, 6, color='red', alpha=0.5)
-plt.show()
 
 
+ts1= [2,4,8,6,4]
+ts2= [2,3,2,2,3,3,2,2,3,2,3]
+ts= ts1+ ts2
+ts = np.asfarray(ts,float)
 
-
+#plt.plot(ts)
+#plt.show()
 
