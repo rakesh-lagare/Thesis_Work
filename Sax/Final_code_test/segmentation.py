@@ -42,7 +42,7 @@ def segment_ts(ts,window_size,skip_offset,word_length,y_alpha_size):
             curr_word+=str(curr_letter)
             complete_indices.append(curr_count)
             num+=chunk_size
-
+        
         words.append(curr_word)
         indices.append(curr_count)
         
@@ -55,8 +55,9 @@ def segment_ts(ts,window_size,skip_offset,word_length,y_alpha_size):
         temp_df.insert(loc=0, column='sub_section', value=temp_list)
         temp_df.insert(loc=0, column='keys', value=curr_word)
         temp_df.insert(loc=0, column='position', value=sorted(sub_section)[len(sub_section) // 2])
-        temp_df.insert(loc=0, column='scale_high', value=np.max(sub_section))
-        temp_df.insert(loc=0, column='scale_low', value=np.min(sub_section))
+        #temp_df.insert(loc=0, column='scale_high', value=np.max(sub_section))
+        #temp_df.insert(loc=0, column='scale_low', value=np.min(sub_section))
+        temp_df.insert(loc=0, column='scale', value= abs ( np.max(sub_section)  - np.min(sub_section)  ))
         temp_df.insert(loc=0, column='indices', value=curr_count)
         
         

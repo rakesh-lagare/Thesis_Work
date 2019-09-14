@@ -26,30 +26,33 @@ def dtw_visualization(dtw_df,skip_offset,ts):
 
 
 def dtw_visualization2(dtw_df,seg_df):
-   
-    idx1 = dtw_df['index1'].tolist()
-    idx2 = dtw_df['index2'].tolist()
-    idx= idx1 + idx2
-    unique_list = list(set(idx))
-    lent= len(unique_list)
-    row=int(lent/4)
     
-    print(unique_list)
     
-    if(lent > 4):
-        fig = plt.figure(figsize=(6*row, 5*row))
-        for i in range(0,lent):
-            row1 = seg_df.loc[seg_df['indices'] == unique_list[i]]
-            sub_section = row1.iloc[0]['sub_section']
-            fig.add_subplot(row+1, 4,i+1 )
-            plt.plot(sub_section, '--.')
-    else:
-        fig = plt.figure(figsize=(3*3, 4*3))
-        for i in range(0,lent):
-            row1 = seg_df.loc[seg_df['indices'] == unique_list[i]]
-            sub_section = row1.iloc[0]['sub_section']
-            fig.add_subplot(5, 2,i+1 )
-            plt.plot(sub_section)
-    #plt.savefig('./Output/sliding_half_segment/'+key+'.png')
-    #plt.savefig('books_read.png')        
-    plt.show()
+    if(len(dtw_df)> 0):
+        idx1 = dtw_df['index1'].tolist()
+        idx2 = dtw_df['index2'].tolist()
+        idx= idx1 + idx2
+        unique_list = list(set(idx))
+        lent= len(unique_list)
+        row=int(lent/4)
+        
+        print(unique_list)
+        
+        if(lent > 4):
+            fig = plt.figure(figsize=(3*3, 4*3))
+            for i in range(0,lent):
+                row1 = seg_df.loc[seg_df['indices'] == unique_list[i]]
+                sub_section = row1.iloc[0]['sub_section']
+                fig.add_subplot(row+1, 4,i+1 )
+                plt.plot(sub_section, '--.')
+                
+        else:
+            fig = plt.figure(figsize=(3*3, 4*3))
+            for i in range(0,lent):
+                row1 = seg_df.loc[seg_df['indices'] == unique_list[i]]
+                sub_section = row1.iloc[0]['sub_section']
+                fig.add_subplot(5, 2,i+1 )
+                plt.plot(sub_section, '--.')
+        #plt.savefig('./Output/sliding_half_segment/'+key+'.png')
+        #plt.savefig('books_read.png')        
+        plt.show()

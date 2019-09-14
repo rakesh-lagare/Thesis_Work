@@ -25,9 +25,11 @@ def dtw_val_gen(sub_section1,sub_section2,dt):
 def dtw_rank_gen(dtw_temp):
     
     med=(dtw_temp['dtw_value'] ).tolist()
-    if(len(dtw_temp)> 5) :
-        dtw_temp = dtw_temp[dtw_temp['dtw_value'] < median(med)  ]  #median(med)
+    #print(dtw_temp['dtw_value'])
+    #if(len(dtw_temp)> 5) :
+        #dtw_temp = dtw_temp[dtw_temp['dtw_value'] < median(med)  ]  #median(med)
     dtw_temp= dtw_temp.sort_values(by=['dtw_value'])
+    #print(dtw_temp['dtw_value'])
     rank_list=[]
     for m in range(1, len(dtw_temp)+1):
             rank_list.append(m)
@@ -39,10 +41,10 @@ def dtw_rank_gen(dtw_temp):
 
 """-------------     Y_Alphabetize      ------------- """
 def alphabetize_ts(sub_section,y_alpha_size):
-    y_alphabets=get_y_alphabets(y_alpha_size)
-    mean_val=x_distrubted_values(sub_section)
-    y_alpha_val=min(y_alphabets, key=lambda x:abs(x-mean_val))
-    y_alpha_idx=y_alphabets.index(y_alpha_val)
+    y_alphabets = get_y_alphabets(y_alpha_size)
+    mean_val = x_distrubted_values(sub_section)
+    y_alpha_val = min(y_alphabets, key=lambda x:abs(x-mean_val))
+    y_alpha_idx = y_alphabets.index(y_alpha_val)
     curr_word = index_to_letter(y_alpha_idx)
 
     return(curr_word)
@@ -61,8 +63,8 @@ def index_to_letter(idx):
 """-------------     X-axis Distribution      ------------- """
 
 def x_distrubted_values(series):
-    mean=np.mean(series)
-    median=sorted(series)[len(series) // 2]
+    mean = np.mean(series)
+    median = sorted(series)[len(series) // 2]
     return median
 
 

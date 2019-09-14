@@ -6,7 +6,7 @@ from dtw_visualization import dtw_visualization ,dtw_visualization2
 
 
 
-def  dtw_rank_table (df_dtw_prep, compare_list, window_size, seg_df, ts):
+def  dtw_rank_table (df_dtw_prep, compare_list, window_size, ts):
 
     dtw_rank_df=pd.DataFrame()
     
@@ -15,7 +15,7 @@ def  dtw_rank_table (df_dtw_prep, compare_list, window_size, seg_df, ts):
         v_temp=str(v)[2:-2]
         v1=[int(s) for s in v_temp.split(',')]
 
-        if(len(v1) > 2):
+        if(len(v1) > 1):
             dtw_temp=pd.DataFrame()
             print(k)
             for i in range(0,len(v1)-1):
@@ -31,7 +31,7 @@ def  dtw_rank_table (df_dtw_prep, compare_list, window_size, seg_df, ts):
                         index1 = row1.iloc[0]['indices']
                         index2 = row2.iloc[0]['indices']
                         
-                        dtw_value= dtw_val_gen(sub_section1, sub_section2,1)
+                        dtw_value= dtw_val_gen(sub_section1, sub_section2,0)
                         temp_df = pd.DataFrame([[k,index1,index2,sub_section1,sub_section2,dtw_value]], columns=['key','index1','index2','sub_section1','sub_section2','dtw_value'])
                         dtw_temp=dtw_temp.append(temp_df,ignore_index=True)
 
@@ -62,10 +62,19 @@ def  dtw_rank_table (df_dtw_prep, compare_list, window_size, seg_df, ts):
 
             
             dtw_rank_df= dtw_rank_df.append(dtw_temp,ignore_index=True)
-            
-        #dtw_visualization(dtw_temp,window_size, ts) 
-        #dtw_visualization2(dtw_temp,seg_df)
-
+        
+        
+        
+        #prep_visualize(dtw_temp,window_size,ts,df_dtw_prep)
+        
 
 
     return(dtw_rank_df)
+    
+
+
+def prep_visualize(dtw_temp,window_size,ts,df_dtw_prep):
+    if(len(dtw_temp)> 0):
+        #dtw_visualization(dtw_temp,window_size, ts)
+        dtw_visualization2(dtw_temp,df_dtw_prep)
+        
