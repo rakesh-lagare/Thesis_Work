@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
 from saxpy.distance import euclidean
-from helper_functions import dtw_val_gen 
+from helper_functions import dtw_val_gen
+from dtw_visualization import dtw_visualization2
 
 def orinal_dtw_rank_tab(seg_df):
     dtw_temp=pd.DataFrame()
@@ -23,7 +24,7 @@ def orinal_dtw_rank_tab(seg_df):
                 temp_df = pd.DataFrame([[index1,index2,sub_section1,sub_section2,dtw_value]], columns=['index1','index2','sub_section1','sub_section2','dtw_value'])
                 dtw_temp=dtw_temp.append(temp_df,ignore_index=True)
 
-
+    #dtw_visualization2(dtw_temp,seg_df)
     return dtw_temp
 
 

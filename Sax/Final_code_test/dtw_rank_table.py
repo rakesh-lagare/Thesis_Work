@@ -14,13 +14,12 @@ def  dtw_rank_table (df_dtw_prep, compare_list, window_size, ts):
 
         v_temp=str(v)[2:-2]
         v1=[int(s) for s in v_temp.split(',')]
-
+        
         if(len(v1) > 1):
             dtw_temp=pd.DataFrame()
             print(k)
             for i in range(0,len(v1)-1):
                 for j in range(i,len(v1)):
-
                     if(v1[i] != v1[j]):
                         row1 = df_dtw_prep.loc[df_dtw_prep['indices'] == v1[i]]
                         row2 = df_dtw_prep.loc[df_dtw_prep['indices'] == v1[j]]
@@ -38,8 +37,7 @@ def  dtw_rank_table (df_dtw_prep, compare_list, window_size, ts):
             dtw_temp = dtw_rank_gen(dtw_temp)
             dtw_rank_df= dtw_rank_df.append(dtw_temp,ignore_index=True)
             
-            
-            
+             
         else:
             dtw_temp=pd.DataFrame()
             print(k)
@@ -62,7 +60,7 @@ def  dtw_rank_table (df_dtw_prep, compare_list, window_size, ts):
 
             
             dtw_rank_df= dtw_rank_df.append(dtw_temp,ignore_index=True)
-        
+            
         
         
         #prep_visualize(dtw_temp,window_size,ts,df_dtw_prep)

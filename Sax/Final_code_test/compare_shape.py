@@ -22,14 +22,17 @@ def compare_shape_algo(seg_alpha,seg_indices,seg_df,word_length,ham_distance):
         temp_list.append(simillar_word.get(key_i))
         map_keys[key_i].append(key_i)
         
+        sum_i=sum(map(ord,key_i))
+        
         for key_j in simillar_word:
+            sum_j = sum(map(ord,key_j))
             dist = hamming_distance(key_i, key_j)
-            if(dist == ham_distance and key_i !=key_j):
+            if(dist == ham_distance and key_i !=key_j and (sum_j == sum_i+ ham_distance or sum_j == sum_i- ham_distance)):
                 map_keys[key_i].append(key_j)
                 temp_list.append(simillar_word.get(key_j))
-            else:
-                map_keys[key_i].append([])
-
+            #else:
+                #map_keys[key_i].append([])
+                
         tempp = list(itertools.chain(*temp_list))
         map_indices[key_i].append(tempp)
         

@@ -24,10 +24,11 @@ def dtw_val_gen(sub_section1,sub_section2,dt):
 
 def dtw_rank_gen(dtw_temp):
     
-    med=(dtw_temp['dtw_value'] ).tolist()
+    #med=(dtw_temp['dtw_value'] ).tolist()
     #print(dtw_temp['dtw_value'])
     #if(len(dtw_temp)> 5) :
         #dtw_temp = dtw_temp[dtw_temp['dtw_value'] < median(med)  ]  #median(med)
+    
     dtw_temp= dtw_temp.sort_values(by=['dtw_value'])
     #print(dtw_temp['dtw_value'])
     rank_list=[]
@@ -65,7 +66,7 @@ def index_to_letter(idx):
 def x_distrubted_values(series):
     mean = np.mean(series)
     median = sorted(series)[len(series) // 2]
-    return median
+    return mean
 
 
 """-------------     Normalization      ------------- """
