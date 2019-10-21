@@ -38,3 +38,5 @@ def compare_shape_algo(seg_alpha,seg_indices,seg_df,word_length,ham_distance):
         
         
     return (map_keys,map_indices)
+
+

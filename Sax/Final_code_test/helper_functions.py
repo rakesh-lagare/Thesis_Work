@@ -6,12 +6,15 @@ from dtw import dtw
 from statistics import median
 
 
+
+
 def dtw_val_gen(sub_section1,sub_section2,dt):
     if (dt == 0): #Normal DTW
         x=np.array(sub_section1).reshape(-1, 1)
         y=np.array(sub_section2).reshape(-1, 1)
         euclidean_norm = lambda x, y: np.abs(x - y)
         dtw_value, cost_matrix, acc_cost_matrix, path = dtw(x, y, dist=euclidean_norm)
+
     else:   #Fast DTW
         x = np.array(sub_section1)
         y = np.array(sub_section2)
@@ -34,7 +37,7 @@ def dtw_rank_gen(dtw_temp):
     rank_list=[]
     for m in range(1, len(dtw_temp)+1):
             rank_list.append(m)
-    dtw_temp.insert(loc=6, column='ranks', value=rank_list)
+    dtw_temp.insert(loc=7, column='ranks', value=rank_list)
     
     return dtw_temp
 
