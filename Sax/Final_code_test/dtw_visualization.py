@@ -122,6 +122,49 @@ def dtw_visualization_scale2(dtw_df):
 
 
 
+
+
+
+def dtw_visualization_DTW(idx,seg_df):
+
+
+        lent= len(idx)
+        row=int(lent/4)
+        
+        #print(key)
+        #print(unique_list)
+        
+        
+        if(lent > 4):
+            fig = plt.figure(figsize=(3*3, 4*3))
+            for i in range(0,lent):
+                row1 = seg_df.loc[seg_df['indices'] == idx[i]]
+                sub_section = row1.iloc[0]['sub_section']
+                fig.add_subplot(row+1, 4,i+1 )
+                plt.plot(sub_section)
+                plt.savefig('./Output/DTW/' +str(i)+'.png')
+                plt.show()
+                #plt.plot(sub_section, '--.')
+                
+        else:
+            fig = plt.figure(figsize=(3*3, 4*3))
+            for i in range(0,lent):
+                row1 = seg_df.loc[seg_df['indices'] == idx[i]]
+                sub_section = row1.iloc[0]['sub_section']
+                fig.add_subplot(5, 2,i+1 )
+                #plt.plot(sub_section, '--.')
+                plt.plot(sub_section)
+                plt.savefig('./Output/DTW/' +str(i)+'.png')
+                plt.show()
+
+        
+        
+
+
+
+
+
+
 def prep_dtw_vis(key,idx,seg_df):
         key = str(key)
         unique_list = list(set(idx))

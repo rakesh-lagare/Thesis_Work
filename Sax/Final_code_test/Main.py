@@ -11,7 +11,7 @@ from rank_table_with_params import rank_table_with_param
 from rank_table_without_params import rank_table_without_param
 from helper_functions import normalize
 from evaluation import orinal_dtw_rank_tab,euclidean_rank_tab
-from dtw_visualization import prep_dtw_vis
+from dtw_visualization import dtw_visualization_DTW
 
 
 
@@ -45,7 +45,8 @@ def remove_files():
     files3 = glob.glob('C:/Megatron/Thesis/Thesis_Work/Sax/Final_code_test/Output/DTW/*')
     for f in files3:
         os.remove(f)
-
+    
+    os.remove('C:/Megatron/Thesis/Thesis_Work/Sax/Final_code_test/Output/Original.png')
 remove_files()
 
 pre_data =  pd.read_csv('dataList.csv', sep=',', header=None)
@@ -80,10 +81,8 @@ tab_PA_class_rank_without,temp_subClass_scale_without = rank_table_without_param
 print("--------------   With Param  ----------------------------------")
 tab_PA_class_rank_with , temp_subClass_scale_with= rank_table_with_param(seg_df, compare_list, window_size, ts)
 
-
-#print("--------------------------------Original DTW---------------------")
+print("--------------------------------Original DTW---------------------")
 tab_dtw  = orinal_dtw_rank_tab(seg_dtw_df)
-
 
 
 #print("----------------------------Euclidean---------------------------")
@@ -131,7 +130,7 @@ def PA_class_accuracy():
 
 
 
-def DTW_class_accuracy():
+def DTW_class_accuracy_old():
     map_data= defaultdict(list)
     for i in range(0,len(tab_dtw)-1):
         row1_idx1 = tab_dtw.iloc[i]['index1']
@@ -162,12 +161,53 @@ def DTW_class_accuracy():
 #lisst = DTW_class_accuracy()
 
 
+def DTW_class_accuracy():
+    dtw_idx_full_list = tab_dtw['indices'].tolist()
+    dtw_idx_list = dtw_idx_full_list[0:len(data_df)]
+    
+    dtw_indices=[]
+    for i in dtw_idx_list:
+        dtw_indices.extend(i)
+    
+    
+    dtw_indices = list(set(dtw_indices))
+    dtw_indices.sort()
+
+
+    data_df_lst = data_df['index']
+    data_df_lst =[i * 100 for i in data_df_lst]
+    
+
+    dtw_true_pos = 0
+    dtw_false_pos = 0
+    dtw_true_neg = 0
+    for i in data_df_lst:
+        if(i in dtw_indices):
+            dtw_true_pos = dtw_true_pos + 1
+        else:
+            dtw_false_pos = dtw_false_pos + 1
+    
+    dtw_true_neg = len(dtw_idx_full_list) - len(dtw_idx_list)
+    
+    #print("dtw_true_pos    :", dtw_true_pos)
+    #print("dtw_false_pos   :", dtw_false_pos)
+    #print("dtw_true_neg    :", dtw_true_neg)
+    
+    dtw_visualization_DTW(dtw_indices,seg_df)
+    return (dtw_true_pos,dtw_false_pos, dtw_true_neg)
+
+
+
+
+
+
+
 def eval_methods():
     df_org_seg = pd.DataFrame()
     df_org_class_temp = defaultdict(list)
     df_org_class = []
     map_data= defaultdict(list)
-    map_data_org_class= defaultdict(list)
+
     for i in range(0,len(data_df)-1):
         
         row1_idx = data_df.iloc[i]['index']
@@ -179,33 +219,29 @@ def eval_methods():
             row2_class = data_df.iloc[j]['class']
             
             indices=[]
-            #indices_new=[row1_idx* window_size,row2_idx* window_size]
 
             map_data[row1_class].append(row1_idx* window_size)
             map_data[row2_class].append(row2_idx* window_size)
-            #if( row1_idx != row2_idx):
-                #map_data_org_class[row1_class].append(indices_new)
-                
-                
+
+
             if( row1_class == row2_class and row1_idx != row2_idx):
                 indices=[row1_idx* window_size,row2_idx* window_size]
                 
-                temp_df = pd.DataFrame([[row1_class,indices,row1_idx* window_size,row2_idx* window_size]], columns=['class','indices','index1','index2'])
+                temp_df = pd.DataFrame([[row1_class,indices,row1_idx* window_size,row2_idx* window_size]],
+                                       columns=['class','indices','index1','index2'])
                 df_org_seg = df_org_seg.append(temp_df,ignore_index=True)
-                
- 
+
             df_org_class_temp[int(row1_class)].append(row1_idx* window_size)
             df_org_class_temp[int(row2_class)].append(row2_idx* window_size)
                 
-                
-    
-    
-    
+
+
     """ ------ ------------------Segments -------------------"""
     
     proposed_idx_list = tab_PA_class_rank_without['indices'].tolist()
     data_idx =  df_org_seg['indices']
 
+    
     
     dtw_idx_list = tab_dtw['indices'].tolist()
     PA_segment_accuracy = 0
@@ -228,22 +264,37 @@ def eval_methods():
 
     for k,val in df_org_class_temp1.items():
         df_org_class.append(val[0])
-
+    
+    
+    
     PA_with_param_class_list ,PA_without_param_class_list = PA_class_accuracy()
-    dtw_list = DTW_class_accuracy()
-    PA_class_accuracy_with = 0
-    PA_class_accuracy_without = 0
-    dtw_class_accuracy = 0
+    
+    dtw_true_pos,dtw_false_pos, dtw_true_neg = DTW_class_accuracy()
+    PA_with_class_true_pos = 0
+    PA_with_class_true_neg = 0
+    PA_with_class_false_pos = 0
+    PA_without_class_true_pos = 0
+    PA_without_class_true_neg = 0
+    PA_without_class_false_pos = 0
+    
     for lst in df_org_class:
         
         if(lst in PA_with_param_class_list):
-            PA_class_accuracy_without = PA_class_accuracy_without + 1
+            PA_without_class_true_pos = PA_without_class_true_pos + 1
+        else:
+            PA_without_class_false_pos = PA_without_class_false_pos + 1
         
         if(lst in PA_without_param_class_list):
-            PA_class_accuracy_with = PA_class_accuracy_with + 1
+            PA_with_class_true_pos = PA_with_class_true_pos + 1
+        else:
+            PA_with_class_false_pos = PA_with_class_false_pos + 1
             
-        if(lst in dtw_list):
-            dtw_class_accuracy = dtw_class_accuracy + 1
+
+    
+    
+    PA_with_class_true_neg = len(PA_with_param_class_list) - PA_with_class_true_pos - PA_with_class_false_pos
+    
+    PA_without_class_true_neg = len(PA_without_param_class_list) - PA_without_class_true_pos - PA_without_class_false_pos
     
     
 
@@ -265,17 +316,26 @@ def eval_methods():
         unique_val1 = list(set(val1))
         org_subClass_list.append(unique_val1)
     
-    PA_scale_subClass_accuracy_with = 0
-    PA_scale_subClass_accuracy_without = 0
+    PA_with_subClass_scale_true_pos = 0
+    PA_with_subClass_scale_false_pos = 0
+    PA_with_subClass_scale_true_neg = 0
+    PA_without_subClass_scale_true_pos = 0
+    PA_without_subClass_scale_false_pos = 0
+    PA_without_subClass_scale_true_neg = 0
     for lst in org_subClass_list:
         if(lst in scale_subClass_accuracy_without):
-            PA_scale_subClass_accuracy_without = PA_scale_subClass_accuracy_without + 1
+            PA_without_subClass_scale_true_pos = PA_without_subClass_scale_true_pos + 1
+        else:
+            PA_without_subClass_scale_false_pos = PA_without_subClass_scale_false_pos + 1
         
         if(lst in scale_subClass_accuracy_with):
-            PA_scale_subClass_accuracy_with = PA_scale_subClass_accuracy_with + 1
+            PA_with_subClass_scale_true_pos = PA_with_subClass_scale_true_pos + 1
+        else:
+            PA_with_subClass_scale_false_pos = PA_with_subClass_scale_false_pos + 1
     
-    
-    
+    PA_with_subClass_scale_true_neg = len(scale_subClass_accuracy_with) - PA_with_subClass_scale_true_pos - PA_with_subClass_scale_false_pos
+    PA_without_subClass_scale_true_neg = len(scale_subClass_accuracy_without) - PA_without_subClass_scale_true_pos - PA_without_subClass_scale_false_pos
+     
     """---------------------------------- Report ------------------------------------"""
     print("")
     print("")
@@ -285,20 +345,35 @@ def eval_methods():
     print("Dataset Size : ", len(ts))
     print("")
     print("---------------Segment Accuracy---------------------")
-    print("Actual Segments                    :", len(data_idx))
-    print("PA Segment Accuracy                :", PA_segment_accuracy)
-    print("DTW  Segment Accuracy              :", DTW_segment_accuracy)
+    print("Actual Segments                      :", len(data_idx))
+    print("PA Segment Accuracy                  :", PA_segment_accuracy)
+    print("DTW  Segment Accuracy                :", DTW_segment_accuracy)
     print("")
     print("---------------Class Accuracy---------------------")
-    print("Actual classes                     :", len(df_org_class))
-    print("DTW class accuracy                 :", dtw_class_accuracy)
-    print("PA class accuracy without          :", PA_class_accuracy_without)
-    print("PA class accuracy with             :", PA_class_accuracy_with)
+    print("Actual class true pos                :", len(df_org_class))
+    print("------- DTW ----")
+    print("DTW class true pos                   :", dtw_true_pos)
+    print("DTW class false pos                  :", dtw_false_pos)
+    print("DTW class  true neg                  :", dtw_true_neg)
+    print("------- PA without ----")
+    print("PA without class true pos            :", PA_without_class_true_pos)
+    print("PA without class false pos           :", PA_without_class_false_pos)
+    print("PA without class true neg            :", PA_without_class_true_neg)
+    print("------- PA with ----")
+    print("PA with class true pos               :", PA_with_class_true_pos)
+    print("PA with class false pos              :", PA_with_class_false_pos)
+    print("PA with class true neg               :", PA_with_class_true_neg)
     print("")
     print("---------------Sub Class Accuracy---------------------")
-    print("Actual Sub Classes                 :", len(org_subClass_list))
-    print("PA Scale SubClass Accuracy without :", PA_scale_subClass_accuracy_without)
-    print("PA Scale SubClass Accuracy with    :", PA_scale_subClass_accuracy_with)
+    print("Actual Sub Classes                   :", len(org_subClass_list))
+    print("------- PA without ----")
+    print("PA without Scale SubClass true pos   :", PA_without_subClass_scale_true_pos)
+    print("PA without Scale SubClass false pos  :", PA_without_subClass_scale_false_pos)
+    print("PA without Scale SubClass true neg   :", PA_without_subClass_scale_true_neg)
+    print("------- PA with ----")
+    print("PA with Scale SubClass true pos      :", PA_with_subClass_scale_true_pos)
+    print("PA with Scale SubClass false pos     :", PA_with_subClass_scale_false_pos)
+    print("PA with Scale SubClass true neg      :", PA_with_subClass_scale_true_neg)
     
 
     return (df_org_seg,df_org_class,org_subClass_list,scale_subClass_accuracy_without,scale_subClass_accuracy_with )
@@ -307,6 +382,6 @@ eval_start = timeit.default_timer()
 tab_segments_org, tab_class_org, tab_subClass_org,tab_subClass_PA_without,tab_subClass_PA_with = eval_methods()
 eval_stop = timeit.default_timer()
 print("")
-print('Eval Time: ', eval_stop - eval_start)  
+#print('Eval Time: ', eval_stop - eval_start)  
 
 

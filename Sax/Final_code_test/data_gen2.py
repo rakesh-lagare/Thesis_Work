@@ -77,7 +77,7 @@ def prep_data(num):
         
         random_clas = randrange(4) + 1
         random_noise = randrange(2)
-        random_scale = 0#randrange(2)
+        random_scale = 1#randrange(2)
         random_offset = 0#randrange(2)
         
 
