@@ -15,7 +15,7 @@ def pattern_gen(clas,noise,scale,offset):
     
     ts_data=[]
     tsn= [10,10,10,10,13,10,10,10,13,10,10,10,10,10,10,10,13,10,10,10,13,10,10,10]
-    ts_noise = nprnd.randint(20, size=100)
+    ts_noise = nprnd.randint(15, size=100)
     ts_n0ise = nprnd.randint(5, size=100)
     #box
     if (clas == 1):
@@ -63,6 +63,32 @@ def pattern_gen(clas,noise,scale,offset):
             
         if(noise == 1):
             ts_data = [sum(x) for x in zip(ts_data, ts_noise-10)]
+            
+            
+            
+    elif (clas == 5):
+        ts_data = [20,30,85,88,90,88,85,36,34,36,55,60,58,20,20,18,18,20,20,90,85,55,55,55,60,
+           10,20,30,85,88,90,88,85,36,34,36,55,60,58,20,20,18,18,20,20,90,85,55,55,55,60,10]
+        
+        
+        if(scale == 1):
+            ts_data =[i * 3.5 for i in ts_data]
+            
+        if(noise == 1):
+            ts_data = [sum(x) for x in zip(ts_data, ts_noise)]
+            
+    elif (clas == 6):
+        ts_data = [10,20,30,90,90,90,90,90,90,90,90,90,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,
+             55,55,55,55,55,55,55,55,90,90,90,90,90,90,90,90,90,30,20,10]
+        
+        
+        if(scale == 1):
+            ts_data =[i * 3.5 for i in ts_data]
+            
+        if(noise == 1):
+            ts_data = [sum(x) for x in zip(ts_data, ts_noise)]
+
+
 
     tss=  tsn + ts_data + tsn
     return (tss)    
@@ -76,8 +102,8 @@ def prep_data(num):
         
         
         random_clas = randrange(4) + 1
-        random_noise = randrange(2)
-        random_scale = 1#randrange(2)
+        random_noise = 1#randrange(2)
+        random_scale = randrange(2)
         random_offset = 0#randrange(2)
         
 
@@ -101,10 +127,7 @@ def prep_data(num):
 
 
 
-
-
-
-df,data_list = prep_data(10)
+df,data_list = prep_data(100)
 
 
 

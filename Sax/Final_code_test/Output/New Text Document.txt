@@ -1,0 +1,51 @@
+
+Dataset Size :  100000
+
+---------------Segment Accuracy---------------------
+Actual Segments                      : 62693
+PA Segment Accuracy                  : 62693
+DTW  Segment Accuracy                : 62693
+
+---------------Class Accuracy---------------------
+Actual class true pos                : 4
+------- DTW ----
+DTW class true pos                   : 120
+DTW class false pos                  : 880
+DTW class  true neg                  : 498500
+------- PA without ----
+PA without class true pos            : 3
+PA without class false pos           : 1
+PA without class true neg            : 1
+------- PA with ----
+PA with class true pos               : 3
+PA with class false pos              : 1
+PA with class true neg               : 1
+---------------Sub Class Accuracy---------------------
+Actual Sub Classes                   : 8
+------- PA without ----
+PA without Scale SubClass true pos   : 2
+PA without Scale SubClass false pos  : 6
+PA without Scale SubClass true neg   : -3
+------- PA with ----
+PA with Scale SubClass true pos      : 8
+PA with Scale SubClass false pos     : 0
+PA with Scale SubClass true neg      : 0
+
+-------------------- TOP K-------------------------
+Top k: 62693
+------- PA without TOPK ----
+PA without class top K true pos      : 62693
+PA without class top K false pos     : 63070
+PA without class top K true neg      : 2507
+------- DTW Class TOPK ----
+DTW top K class true pos             : 62693
+DTW top K class false pos            : 63070
+DTW top K class  true neg            : 373737
+------- PA with TOPK ----
+PA with Sub Class top K true pos     : 62693
+PA with Sub Class top K false pos    : 0
+PA with Sub Class top K true neg     : 2507
+------- DTW Sub Class TOPK ----
+DTW top K Sub Class true pos          : 43740
+DTW top K Sub Class false pos         : 18953
+DTW top K Sub Class  true neg         : 461594

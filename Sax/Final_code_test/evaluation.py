@@ -6,7 +6,9 @@ from dtw_visualization import dtw_visualization1,dtw_visualization2
 
 def orinal_dtw_rank_tab(seg_df):
     dtw_temp=pd.DataFrame()
+    print("Length of Data",len(seg_df))
     for i in range(0,len(seg_df)-1):
+        print(i+1)
         for j in range(i,len(seg_df)):
             row1 = seg_df.loc[i]
             row2 = seg_df.loc[j]
@@ -27,7 +29,6 @@ def orinal_dtw_rank_tab(seg_df):
                         
                 dtw_temp=dtw_temp.append(temp_df,ignore_index=True)
     tab_dtw = dtw_temp.sort_values(by=['dtw_value'])
-    #dtw_visualization1(tab_dtw,seg_df)
     return tab_dtw
 
 

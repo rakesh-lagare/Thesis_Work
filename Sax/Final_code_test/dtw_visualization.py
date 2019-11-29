@@ -12,8 +12,8 @@ def dtw_visualization1(dtw_df,seg_df):
         lent= len(unique_list)
         row=int(lent/4)
         key = dtw_df.iloc[0]['key']
-        print(key)
-        print(unique_list)
+        #print(key)
+        #print(unique_list)
         
         
         if(lent > 4):
@@ -41,8 +41,8 @@ def dtw_visualization1(dtw_df,seg_df):
 
 def dtw_visualization2(dtw_df):
         key = dtw_df.iloc[0]['key']
-        print(key)
-        print(dtw_df.iloc[0]['index1'])
+        #print(key)
+        #print(dtw_df.iloc[0]['index1'])
         sub_section = dtw_df.iloc[0]['sub_section1']
         #plt.plot(sub_section, '--.')
         plt.plot(sub_section)
@@ -58,7 +58,7 @@ def dtw_visualization3(dtw_df,skip_offset,ts):
     
     idx= idx1 + idx2
     unique_list = list(set(idx))
-    print(unique_list)
+    #print(unique_list)
     
     
     plt.figure(figsize=(16,10), dpi= 60)
