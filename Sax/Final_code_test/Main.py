@@ -22,14 +22,13 @@ from dtw_visualization import dtw_visualization_DTW
 start = timeit.default_timer()
 
 
-
+""" ------------ OLD
 pre_data =  pd.read_csv('data22.csv', sep=',', header=None)
-pre_data = pre_data[:200000]
+pre_data = pre_data[:500000]
 #pre_data = pre_data.fillna(0)
 ts = pre_data.iloc[1:,1].values.flatten()
 
-
-
+""" 
 
 def remove_files():
     
@@ -49,11 +48,15 @@ def remove_files():
 #remove_files()
 
 
-""" ------------ OLD
-pre_data =  pd.read_csv('dataList.csv', sep=',', header=None)
-data_df = pd.read_csv('dataframe.csv', sep=',' )
-ts = pre_data.iloc[1:, :1]
-"""
+
+#pre_data =  pd.read_csv('dataList.csv', sep=',', header=None)
+#data_df = pd.read_csv('dataframe.csv', sep=',' )
+#ts = pre_data.iloc[1:, :1]
+    
+    
+pre_data =  pd.read_csv('ECG200.csv', sep=',', header=None)
+ts = pre_data.iloc[:,0].values.flatten()
+
 
 
 ts = np.asfarray(ts,float)
@@ -66,7 +69,7 @@ plt.show()
  
 y_alpha_size = 4
 word_length = 3
-window_size = 5000#round( len(ts) * 0.1 )
+window_size = 120#round( len(ts) * 0.1 )
 skip_offset = round(window_size   ) 
 ham_distance = 0
 
@@ -77,8 +80,8 @@ compare_strings, compare_list = compare_shape_algo(seg_alpha,seg_indices,seg_df,
 
 
 
-print("--------------   Without Param  ----------------------------------")
-tab_PA_class_rank_without,temp_subClass_scale_without = rank_table_without_param(seg_df, compare_list, window_size, ts)
+#print("--------------   Without Param  ----------------------------------")
+tab_PA_class_rank_without = rank_table_without_param(seg_df, compare_list, window_size, ts)
 
 #print("--------------   With Param  ----------------------------------")
 #tab_PA_class_rank_with , temp_subClass_scale_with= rank_table_with_param(seg_df, compare_list, window_size, ts)

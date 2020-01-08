@@ -11,17 +11,15 @@ def  rank_table_without_param (df_dtw_prep, compare_list, window_size, ts):
     map_scale_temp = defaultdict(list)
     total_k = len(compare_list)
     for k, v in compare_list.items():
-        
-        print(total_k,"------", k)
+        print(k,"---------------",total_k)
         v_temp=str(v)[2:-2]
         v1=[int(s) for s in v_temp.split(',')]
-        
         if(len(v1) > 1):
             dtw_temp=pd.DataFrame()
-            print("Length of Comapre List",len(v1))
             for i in range(0,len(v1)-1):
-                print(i+1)
+                
                 for j in range(i,len(v1)):
+                    print(i,"---------",j+1)
                     if(v1[i] != v1[j]):
                         row1 = df_dtw_prep.loc[df_dtw_prep['indices'] == v1[i]]
                         row2 = df_dtw_prep.loc[df_dtw_prep['indices'] == v1[j]]
@@ -35,10 +33,10 @@ def  rank_table_without_param (df_dtw_prep, compare_list, window_size, ts):
                         indices=[index1,index2]
                         
                         
-                        map_scale_temp[k].append(index1)
-                        map_scale_temp[k].append(index2)
+                        #map_scale_temp[k].append(index1)
+                        #map_scale_temp[k].append(index2)
                         
-                        dtw_value= dtw_val_gen(sub_section1, sub_section2,0)
+                        dtw_value= dtw_val_gen(sub_section1, sub_section2,1)
                         temp_df = pd.DataFrame([[k,index1,index2,indices,dtw_value,sub_section1,sub_section2]], 
                                                columns=['key','index1','index2','indices','dtw_value','sub_section1','sub_section2'])
                         
@@ -64,7 +62,7 @@ def  rank_table_without_param (df_dtw_prep, compare_list, window_size, ts):
                 temp_df = pd.DataFrame([[k,index1,indices,sub_section1]], columns=['key','index1','indices','sub_section1'])
                 dtw_temp=dtw_temp.append(temp_df,ignore_index=True)
                 
-                map_scale_temp[k].append(index1)
+                #map_scale_temp[k].append(index1)
             
             dtw_rank_df= dtw_rank_df.append(dtw_temp,ignore_index=True)
             #prep_visualize2(dtw_temp)

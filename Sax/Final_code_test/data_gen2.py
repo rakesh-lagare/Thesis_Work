@@ -127,7 +127,7 @@ def prep_data(num):
 
 
 
-df,data_list = prep_data(100)
+df,data_list = prep_data(10000)
 
 
 
